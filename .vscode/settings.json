@@ -1,5 +1,21 @@
 {
+    "[go]": {
+        "editor.defaultFormatter": "golang.go",
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+            "source.organizeImports": "explicit"
+        }
+    },
+    "mise.configureExtensionsAutomatically": true,
+    "mise.configureExtensionsAutomaticallyIncludeList": [
+        "golang.go"
+    ],
+    "mise.configureExtensionsIncludeGlobalTools": false,
     "cSpell.words": [
+        "Brainz",
         "scrobbling"
-    ]
+    ],
+    "go.alternateTools": {
+        "go": "/Users/drmoo/.local/share/mise/shims/go"
+    },
 }

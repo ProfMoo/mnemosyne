@@ -1,0 +1,6 @@
+[tools]
+go = "1.26"
+
+[env]
+# Optional: Ensure Go uses the toolchain selected by mise instead of downloading a newer one automatically
+GOTOOLCHAIN = "local"

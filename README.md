@@ -23,8 +23,21 @@ The primary difference between prior scrobbling apps and Mnemosyne is correctnes
 - Able to import from Spotify, Tidal. and ListenBrainz (more later, perhaps)
 - Music is tagged from MusicBrainz, with corrections and updates running continually in the background.
 - API-based, heavily spec'd. All API calls are defined via OpenAPI. So new frontends and integrations can be built in any language or framework.
+- Built to be HIGHLY AVAILABLE (can run multiple at once, to ensure no scrobble is missed)
+- Intelligent dedup support (some scrobbling systems double dip). I'll probably disallow scrobbles if they're the same song and are "played"
+- Async jobs that provide interesting, useful insight to you about your listening history (think: "what is my top played in 2025 that was new to me during that year?)
 
 ### Eventually
 
 - AI-based music suggestions based on recent "obsessions" (i.e. fav songs of last week or two). Might just rely on integrations w/ Aurral or other service for this tho.
-- Integrations with music downloaders to automatically download suggestions
+- Integrations with music downloaders to automatically download suggestions based on listening history
+
+## Why Build This?
+
+Honestly, there are good alternatives out there. The reasons I'm building this are:
+
+1. I found some features/behaviors of Koito to be underwhelming.
+   1. The inability to properly tag music on the way in frustrated me. Tons of incorrect or incomplete data.
+   2. Scrobbles were dropped here and there. Seemingly if a scrobble was dropped during import, Koito would just continue onward without issue.
+   3. The Koito interface is honestly not very intuitive or insightful. I want more details info about my listening history, not just monthly breakdowns.
+2. I have been writing code professionally for over a decade. I basically have no choice but to use AI to write all my code at work... and I don't see that changing anytime soon. This project is meant to be a way for me to still spend time on the nitty gritty code. I'll still use AI, especially for undifferentiated heavy lifting and boring tasks. But the design and the core functionality will be all grass fed, organize, hand-written code like the times of yor. I miss it.

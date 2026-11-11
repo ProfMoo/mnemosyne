@@ -1,0 +1,33 @@
+# Compiled binaries and shared libraries
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Output of the go coverage tool, specifically when used with LiteIDE
+*.out
+coverage.*
+*.coverprofile
+profile.cov
+
+# Test binaries, built with `go test -c`
+*.test
+
+# Go workspace files
+go.work
+go.work.sum
+
+# Environment and secret files
+.env
+
+# Dependency directories (uncomment if you do not want to commit vendor/)
+# vendor/
+
+# Common build output folders
+bin/
+dist/
+
+# Editor and OS files
+.idea/
+.DS_Store
