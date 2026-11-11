@@ -6,7 +6,7 @@ MAIN_PACKAGE=cmd/mnemosyne
 
 build:
 	@mkdir -p $(BUILD_DIR)
-	go build -o $(BUILD_DIR)/$(BINARY_NAME) $(MAIN_PACKAGE)
+	go build -o $(BUILD_DIR)/$(BINARY_NAME) $(MAIN_PACKAGE)/main.go
 
 run: build
 	./$(BUILD_DIR)/$(BINARY_NAME)
