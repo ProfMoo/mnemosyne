@@ -21,6 +21,9 @@ go.work.sum
 # Environment and secret files
 .env
 
+# Local SQLite example database and sidecar files
+/mnemosyne.sqlite*
+
 # Dependency directories (uncomment if you do not want to commit vendor/)
 # vendor/
 

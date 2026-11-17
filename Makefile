@@ -2,7 +2,7 @@ BINARY_NAME=mnemosyne
 BUILD_DIR=bin
 MAIN_PACKAGE=cmd/mnemosyne
 
-.PHONY: build run run-dev clean test
+.PHONY: build run run-dev clean test generate
 
 build:
 	@mkdir -p $(BUILD_DIR)
@@ -12,7 +12,10 @@ run: build
 	./$(BUILD_DIR)/$(BINARY_NAME)
 
 run-dev:
-	go run $(MAIN_PACKAGE)
+	go run ./$(MAIN_PACKAGE)
+
+generate:
+	go generate ./...
 
 clean:
 	rm -rf $(BUILD_DIR)

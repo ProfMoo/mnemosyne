@@ -16,6 +16,7 @@
         "scrobbling"
     ],
     "go.alternateTools": {
-        "go": "/Users/drmoo/.local/share/mise/shims/go"
+        "go": "/Users/drmoo/.local/share/mise/shims/go",
+        "dlv": "/Users/drmoo/.local/share/mise/shims/dlv"
     },
 }

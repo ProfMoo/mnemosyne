@@ -1,0 +1,28 @@
+openapi: 3.1.2
+info:
+  title: Mnemosyne API
+  version: 0.1.0
+  description: API for Mnemosyne
+paths:
+  /hello:
+    get:
+      operationId: getHello
+      summary: Say hello
+      responses:
+        "200":
+          description: A hello world greeting.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HelloResponse"
+components:
+  schemas:
+    HelloResponse:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
+          examples:
+            - Hello, World!

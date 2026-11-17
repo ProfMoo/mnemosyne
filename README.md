@@ -2,6 +2,13 @@
 
 Your full music listening history, on your own hardware, forever.
 
+## Quickstart
+
+```sh
+make run-dev
+
+```
+
 ## Purpose
 
 Mnemosyne is meant to be a self-hosted, open-source, replacement for any music listening history (aka "scrobbling") solution. It's an alternative to [last.fm](https://www.last.fm/) (closed source), and [koito](https://github.com/gabehf/koito) and [maloja](https://github.com/krateng/maloja) (both open source).
@@ -15,16 +22,16 @@ The primary difference between prior scrobbling apps and Mnemosyne is:
 
 The reality of self-hosting music apps is that: MusicBrainz is the only good music metadata source (don't try to mix metadata w/ Spotify, Last.FM, etc.). Below I compare Mnemosyne against other solutions, particularly with respect to MusicBrainz tagging.
 
-| Feature | [ListenBrainz Server](https://github.com/metabrainz/listenbrainz-server) | [Koito](https://github.com/gabehf/Koito) | [Maloja](https://github.com/krateng/maloja) | [Multi-Scrobbler](https://github.com/FoxxMD/multi-scrobbler) | [Meelo](https://github.com/Arthi-chaud/Meelo) |
-| --- | --- | --- | --- | --- | --- |
-| **Primary purpose** | 🟡 Full listening platform | ✅ Scrobble server + stats | ✅ Scrobble server + stats | 🟡 Scrobble collection + routing | 🟡 Music library + player |
-| **Intended audience** | 🟡 Community / multi-user | ✅ Personal | ✅ Personal | ✅ Personal | ✅ Personal |
-| **Self-hostable** | 🟡 Very complex | ✅ Easy | ✅ Easy | ✅ Easy | 🟡 Moderate |
-| **MusicBrainz matching** | ✅ Advanced | 🟡 Moderate | ❌ Minimal | ✅ Good | ✅ Good |
-| **Continuous MB rematching** | 🟡 Partial / complex | 🟡 Not verified | ❌ No | ❌ No | 🟡 Library rescanning |
-| **Manual match correction** | ✅ Yes | 🟡 Limited | 🟡 Custom rules | ✅ Yes | ✅ Yes |
-| **Listening analytics**¹ | ✅ Extensive | ✅ Good | ✅ Good | ❌ Basic | 🟡 Moderate |
-| **MB-enriched reporting**² | ✅ Extensive | 🟡 Limited | ❌ Minimal | ❌ Minimal | 🟡 Moderate |
+| Feature | [ListenBrainz Server](https://github.com/metabrainz/listenbrainz-server) | [Koito](https://github.com/gabehf/Koito) | [Multi-Scrobbler](https://github.com/FoxxMD/multi-scrobbler) | [Meelo](https://github.com/Arthi-chaud/Meelo) |
+| --- | --- | --- | --- | --- |
+| **Primary purpose** | 🟡 Full listening platform | ✅ Scrobble server + stats | 🟡 Scrobble collection + routing | 🟡 Music library + player |
+| **Intended audience** | 🟡 Community / multi-user | ✅ Personal | ✅ Personal | ✅ Personal |
+| **Self-hostable** | 🟡 Very complex | ✅ Easy | ✅ Easy | 🟡 Moderate |
+| **MusicBrainz matching** | ✅ Advanced | 🟡 Moderate | ✅ Good | ✅ Good |
+| **Continuous MB rematching** | 🟡 Partial / complex | 🟡 Not verified | ❌ No | 🟡 Library rescanning |
+| **Manual match correction** | ✅ Yes | 🟡 Limited | ✅ Yes | ✅ Yes |
+| **Listening analytics**¹ | ✅ Extensive | ✅ Good | ❌ No | 🟡 Moderate |
+| **MB-enriched reporting**² | ✅ Extensive | 🟡 Limited | ❌ No | 🟡 Moderate |
 
 ^1: More complex analysis and reports. For example, "your favorite 80s track", or "favorite albums that you heard for this first time this year"
 
