@@ -30,6 +30,7 @@ go.work.sum
 # Common build output folders
 bin/
 dist/
+/api/openapi.bundled.yaml
 
 # Editor and OS files
 .idea/

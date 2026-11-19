@@ -1,0 +1,13 @@
+type: object
+required:
+  - listen_type
+  - payload
+properties:
+  listen_type:
+    const: playing_now
+  payload:
+    type: array
+    minItems: 1
+    maxItems: 1
+    items:
+      $ref: '../../openapi.yaml#/components/schemas/PlayingNowListen'

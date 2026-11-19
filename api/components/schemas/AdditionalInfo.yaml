@@ -1,0 +1,77 @@
+type: object
+description: >-
+  All listed fields are optional. The ListenBrainz documentation explicitly
+  permits other application-defined fields. Omit unavailable fields.
+
+  Fields are snake_case because that's the ListenBrainz convention.
+additionalProperties: true
+properties:
+  artist_mbids:
+    type: array
+    items:
+      type: string
+      format: uuid
+  release_group_mbid:
+    type: string
+    format: uuid
+  release_mbid:
+    type: string
+    format: uuid
+  recording_mbid:
+    type: string
+    format: uuid
+  track_mbid:
+    type: string
+    format: uuid
+  work_mbids:
+    type: array
+    items:
+      type: string
+      format: uuid
+  tracknumber:
+    type: string
+  isrc:
+    type: string
+  spotify_id:
+    type: string
+    description: Spotify track URL, per ListenBrainz documentation.
+  tags:
+    type: array
+    maxItems: 50
+    items:
+      type: string
+      maxLength: 64
+  media_player:
+    type: string
+  media_player_version:
+    type: string
+  submission_client:
+    type: string
+  submission_client_version:
+    type: string
+  original_submission_client:
+    type: string
+  music_service:
+    type: string
+    description: Canonical service domain, e.g. spotify.com.
+  music_service_name:
+    type: string
+  origin_url:
+    type: string
+    format: uri
+  duration_ms:
+    type: integer
+    minimum: 0
+    maximum: 2073600000
+  duration:
+    type: integer
+    minimum: 0
+    maximum: 2073600
+  duration_played_ms:
+    type: integer
+    minimum: 0
+  duration_played:
+    type: integer
+    minimum: 0
+  label:
+    type: string

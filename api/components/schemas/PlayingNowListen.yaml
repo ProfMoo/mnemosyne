@@ -1,0 +1,9 @@
+type: object
+required:
+  - track_metadata
+properties:
+  track_metadata:
+    $ref: '../../openapi.yaml#/components/schemas/TrackMetadata'
+not:
+  required:
+    - listened_at

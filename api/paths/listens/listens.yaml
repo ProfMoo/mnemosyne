@@ -1,0 +1,10 @@
+get:
+    operationId: getListens
+    summary: Get all listens
+    responses:
+      "200":
+        description: A list of listens.
+        content:
+          application/json:
+            schema:
+              $ref: "../../openapi.yaml#/components/schemas/ListListensResponse"

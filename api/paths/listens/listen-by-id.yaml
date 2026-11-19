@@ -1,0 +1,18 @@
+get:
+  operationId: getListen
+  summary: Get a listen by ID
+  responses:
+    "200":
+      description: A listen.
+      content:
+        application/json:
+          schema:
+            $ref: "../../openapi.yaml#/components/schemas/GetListenResponse"
+  parameters:
+    - name: listen_id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+      description: The ID of the listen to get.

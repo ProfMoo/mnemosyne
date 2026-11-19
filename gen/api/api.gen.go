@@ -9,9 +9,61 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
+	"time"
+
+	"github.com/oapi-codegen/runtime"
+	openapi_types "github.com/oapi-codegen/runtime/types"
 )
+
+// AdditionalInfo All listed fields are optional. The ListenBrainz documentation explicitly permits other application-defined fields. Omit unavailable fields.
+// Fields are snake_case because that's the ListenBrainz convention.
+type AdditionalInfo struct {
+	ArtistMbids        *[]openapi_types.UUID `json:"artist_mbids,omitempty"`
+	Duration           *int                  `json:"duration,omitempty"`
+	DurationMs         *int                  `json:"duration_ms,omitempty"`
+	DurationPlayed     *int                  `json:"duration_played,omitempty"`
+	DurationPlayedMs   *int                  `json:"duration_played_ms,omitempty"`
+	Isrc               *string               `json:"isrc,omitempty"`
+	Label              *string               `json:"label,omitempty"`
+	MediaPlayer        *string               `json:"media_player,omitempty"`
+	MediaPlayerVersion *string               `json:"media_player_version,omitempty"`
+
+	// MusicService Canonical service domain, e.g. spotify.com.
+	MusicService             *string             `json:"music_service,omitempty"`
+	MusicServiceName         *string             `json:"music_service_name,omitempty"`
+	OriginUrl                *string             `json:"origin_url,omitempty"`
+	OriginalSubmissionClient *string             `json:"original_submission_client,omitempty"`
+	RecordingMbid            *openapi_types.UUID `json:"recording_mbid,omitempty"`
+	ReleaseGroupMbid         *openapi_types.UUID `json:"release_group_mbid,omitempty"`
+	ReleaseMbid              *openapi_types.UUID `json:"release_mbid,omitempty"`
+
+	// SpotifyId Spotify track URL, per ListenBrainz documentation.
+	SpotifyId               *string                `json:"spotify_id,omitempty"`
+	SubmissionClient        *string                `json:"submission_client,omitempty"`
+	SubmissionClientVersion *string                `json:"submission_client_version,omitempty"`
+	Tags                    *[]string              `json:"tags,omitempty"`
+	TrackMbid               *openapi_types.UUID    `json:"track_mbid,omitempty"`
+	Tracknumber             *string                `json:"tracknumber,omitempty"`
+	WorkMbids               *[]openapi_types.UUID  `json:"work_mbids,omitempty"`
+	AdditionalProperties    map[string]interface{} `json:"-"`
+}
+
+// Artist defines model for Artist.
+type Artist struct {
+	Id   openapi_types.UUID `json:"id"`
+	Mbid openapi_types.UUID `json:"mbid"`
+	Name string             `json:"name"`
+}
+
+// CompletedListen defines model for CompletedListen.
+type CompletedListen struct {
+	// ListenedAt Unix epoch seconds at playback start.
+	ListenedAt    int           `json:"listened_at"`
+	TrackMetadata TrackMetadata `json:"track_metadata"`
+}
 
 // HelloResponse defines model for HelloResponse.
 type HelloResponse struct {
@@ -19,11 +71,672 @@ type HelloResponse struct {
 	Message string `json:"message"`
 }
 
+// ImportSubmission defines model for ImportSubmission.
+type ImportSubmission struct {
+	ListenType interface{} `json:"listen_type"`
+
+	// Payload Additional per-listen and overall byte-size limits apply.
+	Payload []CompletedListen `json:"payload"`
+}
+
+// ListListensResponse defines model for ListListensResponse.
+type ListListensResponse struct {
+	Listens []Listen `json:"listens"`
+}
+
+// Listen defines model for Listen.
+type Listen struct {
+	Album struct {
+		Id   openapi_types.UUID `json:"id"`
+		Mbid openapi_types.UUID `json:"mbid"`
+		Name string             `json:"name"`
+	} `json:"album"`
+	AlbumArtists []Artist `json:"albumArtists"`
+	Artists      []Artist `json:"artists"`
+
+	// EndedAt The time the listen ended. UTC ISO 8601 format.
+	EndedAt time.Time          `json:"endedAt"`
+	Id      openapi_types.UUID `json:"id"`
+
+	// StartedAt The time the listen started. UTC ISO 8601 format.
+	StartedAt time.Time `json:"startedAt"`
+	Track     struct {
+		Id   openapi_types.UUID `json:"id"`
+		Mbid openapi_types.UUID `json:"mbid"`
+		Name string             `json:"name"`
+	} `json:"track"`
+}
+
+// PlayingNowListen defines model for PlayingNowListen.
+type PlayingNowListen struct {
+	TrackMetadata TrackMetadata `json:"track_metadata"`
+}
+
+// PlayingNowSubmission defines model for PlayingNowSubmission.
+type PlayingNowSubmission struct {
+	ListenType interface{}        `json:"listen_type"`
+	Payload    []PlayingNowListen `json:"payload"`
+}
+
+// SingleSubmission defines model for SingleSubmission.
+type SingleSubmission struct {
+	ListenType interface{}       `json:"listen_type"`
+	Payload    []CompletedListen `json:"payload"`
+}
+
+// TrackMetadata defines model for TrackMetadata.
+type TrackMetadata struct {
+	// AdditionalInfo All listed fields are optional. The ListenBrainz documentation explicitly permits other application-defined fields. Omit unavailable fields.
+	// Fields are snake_case because that's the ListenBrainz convention.
+	AdditionalInfo *AdditionalInfo `json:"additional_info,omitempty"`
+	ArtistName     string          `json:"artist_name"`
+	ReleaseName    *string         `json:"release_name,omitempty"`
+	TrackName      string          `json:"track_name"`
+}
+
+// SubmitListensJSONBody defines parameters for SubmitListens.
+type SubmitListensJSONBody struct {
+	union json.RawMessage
+}
+
+// SubmitListensParams defines parameters for SubmitListens.
+type SubmitListensParams struct {
+	// ReturnMsid When true for playing_now, include a recording MSID in the response.
+	ReturnMsid *bool `form:"return_msid,omitempty" json:"return_msid,omitempty"`
+}
+
+// SubmitListens200JSONResponseBody defines parameters for SubmitListens.
+type SubmitListens200JSONResponseBody struct {
+	// RecordingMsid May be returned with playing_now and return_msid=true.
+	RecordingMsid        *openapi_types.UUID    `json:"recording_msid,omitempty"`
+	Status               string                 `json:"status"`
+	AdditionalProperties map[string]interface{} `json:"-"`
+}
+
+// SubmitListensJSONRequestBody defines body for SubmitListens for application/json ContentType.
+type SubmitListensJSONRequestBody SubmitListensJSONBody
+
+// Getter for additional properties for AdditionalInfo. Returns the specified
+// element and whether it was found
+func (a AdditionalInfo) Get(fieldName string) (value interface{}, found bool) {
+	if a.AdditionalProperties != nil {
+		value, found = a.AdditionalProperties[fieldName]
+	}
+	return
+}
+
+// Setter for additional properties for AdditionalInfo
+func (a *AdditionalInfo) Set(fieldName string, value interface{}) {
+	if a.AdditionalProperties == nil {
+		a.AdditionalProperties = make(map[string]interface{})
+	}
+	a.AdditionalProperties[fieldName] = value
+}
+
+// Override default JSON handling for AdditionalInfo to handle AdditionalProperties
+func (a *AdditionalInfo) UnmarshalJSON(b []byte) error {
+	object := make(map[string]json.RawMessage)
+	err := json.Unmarshal(b, &object)
+	if err != nil {
+		return err
+	}
+
+	if raw, found := object["artist_mbids"]; found {
+		err = json.Unmarshal(raw, &a.ArtistMbids)
+		if err != nil {
+			return fmt.Errorf("error reading 'artist_mbids': %w", err)
+		}
+		delete(object, "artist_mbids")
+	}
+
+	if raw, found := object["duration"]; found {
+		err = json.Unmarshal(raw, &a.Duration)
+		if err != nil {
+			return fmt.Errorf("error reading 'duration': %w", err)
+		}
+		delete(object, "duration")
+	}
+
+	if raw, found := object["duration_ms"]; found {
+		err = json.Unmarshal(raw, &a.DurationMs)
+		if err != nil {
+			return fmt.Errorf("error reading 'duration_ms': %w", err)
+		}
+		delete(object, "duration_ms")
+	}
+
+	if raw, found := object["duration_played"]; found {
+		err = json.Unmarshal(raw, &a.DurationPlayed)
+		if err != nil {
+			return fmt.Errorf("error reading 'duration_played': %w", err)
+		}
+		delete(object, "duration_played")
+	}
+
+	if raw, found := object["duration_played_ms"]; found {
+		err = json.Unmarshal(raw, &a.DurationPlayedMs)
+		if err != nil {
+			return fmt.Errorf("error reading 'duration_played_ms': %w", err)
+		}
+		delete(object, "duration_played_ms")
+	}
+
+	if raw, found := object["isrc"]; found {
+		err = json.Unmarshal(raw, &a.Isrc)
+		if err != nil {
+			return fmt.Errorf("error reading 'isrc': %w", err)
+		}
+		delete(object, "isrc")
+	}
+
+	if raw, found := object["label"]; found {
+		err = json.Unmarshal(raw, &a.Label)
+		if err != nil {
+			return fmt.Errorf("error reading 'label': %w", err)
+		}
+		delete(object, "label")
+	}
+
+	if raw, found := object["media_player"]; found {
+		err = json.Unmarshal(raw, &a.MediaPlayer)
+		if err != nil {
+			return fmt.Errorf("error reading 'media_player': %w", err)
+		}
+		delete(object, "media_player")
+	}
+
+	if raw, found := object["media_player_version"]; found {
+		err = json.Unmarshal(raw, &a.MediaPlayerVersion)
+		if err != nil {
+			return fmt.Errorf("error reading 'media_player_version': %w", err)
+		}
+		delete(object, "media_player_version")
+	}
+
+	if raw, found := object["music_service"]; found {
+		err = json.Unmarshal(raw, &a.MusicService)
+		if err != nil {
+			return fmt.Errorf("error reading 'music_service': %w", err)
+		}
+		delete(object, "music_service")
+	}
+
+	if raw, found := object["music_service_name"]; found {
+		err = json.Unmarshal(raw, &a.MusicServiceName)
+		if err != nil {
+			return fmt.Errorf("error reading 'music_service_name': %w", err)
+		}
+		delete(object, "music_service_name")
+	}
+
+	if raw, found := object["origin_url"]; found {
+		err = json.Unmarshal(raw, &a.OriginUrl)
+		if err != nil {
+			return fmt.Errorf("error reading 'origin_url': %w", err)
+		}
+		delete(object, "origin_url")
+	}
+
+	if raw, found := object["original_submission_client"]; found {
+		err = json.Unmarshal(raw, &a.OriginalSubmissionClient)
+		if err != nil {
+			return fmt.Errorf("error reading 'original_submission_client': %w", err)
+		}
+		delete(object, "original_submission_client")
+	}
+
+	if raw, found := object["recording_mbid"]; found {
+		err = json.Unmarshal(raw, &a.RecordingMbid)
+		if err != nil {
+			return fmt.Errorf("error reading 'recording_mbid': %w", err)
+		}
+		delete(object, "recording_mbid")
+	}
+
+	if raw, found := object["release_group_mbid"]; found {
+		err = json.Unmarshal(raw, &a.ReleaseGroupMbid)
+		if err != nil {
+			return fmt.Errorf("error reading 'release_group_mbid': %w", err)
+		}
+		delete(object, "release_group_mbid")
+	}
+
+	if raw, found := object["release_mbid"]; found {
+		err = json.Unmarshal(raw, &a.ReleaseMbid)
+		if err != nil {
+			return fmt.Errorf("error reading 'release_mbid': %w", err)
+		}
+		delete(object, "release_mbid")
+	}
+
+	if raw, found := object["spotify_id"]; found {
+		err = json.Unmarshal(raw, &a.SpotifyId)
+		if err != nil {
+			return fmt.Errorf("error reading 'spotify_id': %w", err)
+		}
+		delete(object, "spotify_id")
+	}
+
+	if raw, found := object["submission_client"]; found {
+		err = json.Unmarshal(raw, &a.SubmissionClient)
+		if err != nil {
+			return fmt.Errorf("error reading 'submission_client': %w", err)
+		}
+		delete(object, "submission_client")
+	}
+
+	if raw, found := object["submission_client_version"]; found {
+		err = json.Unmarshal(raw, &a.SubmissionClientVersion)
+		if err != nil {
+			return fmt.Errorf("error reading 'submission_client_version': %w", err)
+		}
+		delete(object, "submission_client_version")
+	}
+
+	if raw, found := object["tags"]; found {
+		err = json.Unmarshal(raw, &a.Tags)
+		if err != nil {
+			return fmt.Errorf("error reading 'tags': %w", err)
+		}
+		delete(object, "tags")
+	}
+
+	if raw, found := object["track_mbid"]; found {
+		err = json.Unmarshal(raw, &a.TrackMbid)
+		if err != nil {
+			return fmt.Errorf("error reading 'track_mbid': %w", err)
+		}
+		delete(object, "track_mbid")
+	}
+
+	if raw, found := object["tracknumber"]; found {
+		err = json.Unmarshal(raw, &a.Tracknumber)
+		if err != nil {
+			return fmt.Errorf("error reading 'tracknumber': %w", err)
+		}
+		delete(object, "tracknumber")
+	}
+
+	if raw, found := object["work_mbids"]; found {
+		err = json.Unmarshal(raw, &a.WorkMbids)
+		if err != nil {
+			return fmt.Errorf("error reading 'work_mbids': %w", err)
+		}
+		delete(object, "work_mbids")
+	}
+
+	if len(object) != 0 {
+		a.AdditionalProperties = make(map[string]interface{})
+		for fieldName, fieldBuf := range object {
+			var fieldVal interface{}
+			err := json.Unmarshal(fieldBuf, &fieldVal)
+			if err != nil {
+				return fmt.Errorf("error unmarshaling field %s: %w", fieldName, err)
+			}
+			a.AdditionalProperties[fieldName] = fieldVal
+		}
+	}
+	return nil
+}
+
+// Override default JSON handling for AdditionalInfo to handle AdditionalProperties
+func (a AdditionalInfo) MarshalJSON() ([]byte, error) {
+	var err error
+	object := make(map[string]json.RawMessage)
+
+	if a.ArtistMbids != nil {
+		object["artist_mbids"], err = json.Marshal(a.ArtistMbids)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling 'artist_mbids': %w", err)
+		}
+	}
+
+	if a.Duration != nil {
+		object["duration"], err = json.Marshal(a.Duration)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling 'duration': %w", err)
+		}
+	}
+
+	if a.DurationMs != nil {
+		object["duration_ms"], err = json.Marshal(a.DurationMs)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling 'duration_ms': %w", err)
+		}
+	}
+
+	if a.DurationPlayed != nil {
+		object["duration_played"], err = json.Marshal(a.DurationPlayed)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling 'duration_played': %w", err)
+		}
+	}
+
+	if a.DurationPlayedMs != nil {
+		object["duration_played_ms"], err = json.Marshal(a.DurationPlayedMs)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling 'duration_played_ms': %w", err)
+		}
+	}
+
+	if a.Isrc != nil {
+		object["isrc"], err = json.Marshal(a.Isrc)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling 'isrc': %w", err)
+		}
+	}
+
+	if a.Label != nil {
+		object["label"], err = json.Marshal(a.Label)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling 'label': %w", err)
+		}
+	}
+
+	if a.MediaPlayer != nil {
+		object["media_player"], err = json.Marshal(a.MediaPlayer)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling 'media_player': %w", err)
+		}
+	}
+
+	if a.MediaPlayerVersion != nil {
+		object["media_player_version"], err = json.Marshal(a.MediaPlayerVersion)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling 'media_player_version': %w", err)
+		}
+	}
+
+	if a.MusicService != nil {
+		object["music_service"], err = json.Marshal(a.MusicService)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling 'music_service': %w", err)
+		}
+	}
+
+	if a.MusicServiceName != nil {
+		object["music_service_name"], err = json.Marshal(a.MusicServiceName)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling 'music_service_name': %w", err)
+		}
+	}
+
+	if a.OriginUrl != nil {
+		object["origin_url"], err = json.Marshal(a.OriginUrl)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling 'origin_url': %w", err)
+		}
+	}
+
+	if a.OriginalSubmissionClient != nil {
+		object["original_submission_client"], err = json.Marshal(a.OriginalSubmissionClient)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling 'original_submission_client': %w", err)
+		}
+	}
+
+	if a.RecordingMbid != nil {
+		object["recording_mbid"], err = json.Marshal(a.RecordingMbid)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling 'recording_mbid': %w", err)
+		}
+	}
+
+	if a.ReleaseGroupMbid != nil {
+		object["release_group_mbid"], err = json.Marshal(a.ReleaseGroupMbid)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling 'release_group_mbid': %w", err)
+		}
+	}
+
+	if a.ReleaseMbid != nil {
+		object["release_mbid"], err = json.Marshal(a.ReleaseMbid)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling 'release_mbid': %w", err)
+		}
+	}
+
+	if a.SpotifyId != nil {
+		object["spotify_id"], err = json.Marshal(a.SpotifyId)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling 'spotify_id': %w", err)
+		}
+	}
+
+	if a.SubmissionClient != nil {
+		object["submission_client"], err = json.Marshal(a.SubmissionClient)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling 'submission_client': %w", err)
+		}
+	}
+
+	if a.SubmissionClientVersion != nil {
+		object["submission_client_version"], err = json.Marshal(a.SubmissionClientVersion)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling 'submission_client_version': %w", err)
+		}
+	}
+
+	if a.Tags != nil {
+		object["tags"], err = json.Marshal(a.Tags)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling 'tags': %w", err)
+		}
+	}
+
+	if a.TrackMbid != nil {
+		object["track_mbid"], err = json.Marshal(a.TrackMbid)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling 'track_mbid': %w", err)
+		}
+	}
+
+	if a.Tracknumber != nil {
+		object["tracknumber"], err = json.Marshal(a.Tracknumber)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling 'tracknumber': %w", err)
+		}
+	}
+
+	if a.WorkMbids != nil {
+		object["work_mbids"], err = json.Marshal(a.WorkMbids)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling 'work_mbids': %w", err)
+		}
+	}
+
+	for fieldName, field := range a.AdditionalProperties {
+		object[fieldName], err = json.Marshal(field)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling '%s': %w", fieldName, err)
+		}
+	}
+	return json.Marshal(object)
+}
+
+// Getter for additional properties for SubmitListens200JSONResponseBody. Returns the specified
+// element and whether it was found
+func (a SubmitListens200JSONResponseBody) Get(fieldName string) (value interface{}, found bool) {
+	if a.AdditionalProperties != nil {
+		value, found = a.AdditionalProperties[fieldName]
+	}
+	return
+}
+
+// Setter for additional properties for SubmitListens200JSONResponseBody
+func (a *SubmitListens200JSONResponseBody) Set(fieldName string, value interface{}) {
+	if a.AdditionalProperties == nil {
+		a.AdditionalProperties = make(map[string]interface{})
+	}
+	a.AdditionalProperties[fieldName] = value
+}
+
+// Override default JSON handling for SubmitListens200JSONResponseBody to handle AdditionalProperties
+func (a *SubmitListens200JSONResponseBody) UnmarshalJSON(b []byte) error {
+	object := make(map[string]json.RawMessage)
+	err := json.Unmarshal(b, &object)
+	if err != nil {
+		return err
+	}
+
+	if raw, found := object["recording_msid"]; found {
+		err = json.Unmarshal(raw, &a.RecordingMsid)
+		if err != nil {
+			return fmt.Errorf("error reading 'recording_msid': %w", err)
+		}
+		delete(object, "recording_msid")
+	}
+
+	if raw, found := object["status"]; found {
+		err = json.Unmarshal(raw, &a.Status)
+		if err != nil {
+			return fmt.Errorf("error reading 'status': %w", err)
+		}
+		delete(object, "status")
+	}
+
+	if len(object) != 0 {
+		a.AdditionalProperties = make(map[string]interface{})
+		for fieldName, fieldBuf := range object {
+			var fieldVal interface{}
+			err := json.Unmarshal(fieldBuf, &fieldVal)
+			if err != nil {
+				return fmt.Errorf("error unmarshaling field %s: %w", fieldName, err)
+			}
+			a.AdditionalProperties[fieldName] = fieldVal
+		}
+	}
+	return nil
+}
+
+// Override default JSON handling for SubmitListens200JSONResponseBody to handle AdditionalProperties
+func (a SubmitListens200JSONResponseBody) MarshalJSON() ([]byte, error) {
+	var err error
+	object := make(map[string]json.RawMessage)
+
+	if a.RecordingMsid != nil {
+		object["recording_msid"], err = json.Marshal(a.RecordingMsid)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling 'recording_msid': %w", err)
+		}
+	}
+
+	object["status"], err = json.Marshal(a.Status)
+	if err != nil {
+		return nil, fmt.Errorf("error marshaling 'status': %w", err)
+	}
+
+	for fieldName, field := range a.AdditionalProperties {
+		object[fieldName], err = json.Marshal(field)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling '%s': %w", fieldName, err)
+		}
+	}
+	return json.Marshal(object)
+}
+
+// AsSingleSubmission returns the union data inside the SubmitListensJSONBody as a SingleSubmission
+func (t SubmitListensJSONBody) AsSingleSubmission() (SingleSubmission, error) {
+	var body SingleSubmission
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromSingleSubmission overwrites any union data inside the SubmitListensJSONBody as the provided SingleSubmission
+func (t *SubmitListensJSONBody) FromSingleSubmission(v SingleSubmission) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeSingleSubmission performs a merge with any union data inside the SubmitListensJSONBody, using the provided SingleSubmission
+func (t *SubmitListensJSONBody) MergeSingleSubmission(v SingleSubmission) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsImportSubmission returns the union data inside the SubmitListensJSONBody as a ImportSubmission
+func (t SubmitListensJSONBody) AsImportSubmission() (ImportSubmission, error) {
+	var body ImportSubmission
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromImportSubmission overwrites any union data inside the SubmitListensJSONBody as the provided ImportSubmission
+func (t *SubmitListensJSONBody) FromImportSubmission(v ImportSubmission) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeImportSubmission performs a merge with any union data inside the SubmitListensJSONBody, using the provided ImportSubmission
+func (t *SubmitListensJSONBody) MergeImportSubmission(v ImportSubmission) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsPlayingNowSubmission returns the union data inside the SubmitListensJSONBody as a PlayingNowSubmission
+func (t SubmitListensJSONBody) AsPlayingNowSubmission() (PlayingNowSubmission, error) {
+	var body PlayingNowSubmission
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromPlayingNowSubmission overwrites any union data inside the SubmitListensJSONBody as the provided PlayingNowSubmission
+func (t *SubmitListensJSONBody) FromPlayingNowSubmission(v PlayingNowSubmission) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergePlayingNowSubmission performs a merge with any union data inside the SubmitListensJSONBody, using the provided PlayingNowSubmission
+func (t *SubmitListensJSONBody) MergePlayingNowSubmission(v PlayingNowSubmission) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t SubmitListensJSONBody) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *SubmitListensJSONBody) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
 // ServerInterface represents all server handlers.
 type ServerInterface interface {
+	// SubmitListens Submit completed, historical, or currently playing listens
+	// (POST /1/submit-listens)
+	SubmitListens(w http.ResponseWriter, r *http.Request, params SubmitListensParams)
 	// GetHello Say hello
 	// (GET /hello)
 	GetHello(w http.ResponseWriter, r *http.Request)
+	// GetListens Get all listens
+	// (GET /listens)
+	GetListens(w http.ResponseWriter, r *http.Request)
+	// GetListen Get a listen by ID
+	// (GET /listens/{listen_id})
+	GetListen(w http.ResponseWriter, r *http.Request, listenId openapi_types.UUID)
 }
 
 // ServerInterfaceWrapper converts contexts to parameters.
@@ -35,11 +748,84 @@ type ServerInterfaceWrapper struct {
 
 type MiddlewareFunc func(http.Handler) http.Handler
 
+// SubmitListens operation middleware
+func (siw *ServerInterfaceWrapper) SubmitListens(w http.ResponseWriter, r *http.Request) {
+
+	var err error
+	_ = err
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params SubmitListensParams
+
+	// ------------- Optional query parameter "return_msid" -------------
+
+	err = runtime.BindQueryParameterWithOptions("form", true, false, "return_msid", r.URL.Query(), &params.ReturnMsid, runtime.BindQueryParameterOptions{Type: "boolean", Format: ""})
+	if err != nil {
+		var requiredError *runtime.RequiredParameterError
+		if errors.As(err, &requiredError) {
+			siw.ErrorHandlerFunc(w, r, &RequiredParamError{ParamName: "return_msid"})
+		} else {
+			siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "return_msid", Err: err})
+		}
+		return
+	}
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.SubmitListens(w, r, params)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
 // GetHello operation middleware
 func (siw *ServerInterfaceWrapper) GetHello(w http.ResponseWriter, r *http.Request) {
 
 	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		siw.Handler.GetHello(w, r)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// GetListens operation middleware
+func (siw *ServerInterfaceWrapper) GetListens(w http.ResponseWriter, r *http.Request) {
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.GetListens(w, r)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// GetListen operation middleware
+func (siw *ServerInterfaceWrapper) GetListen(w http.ResponseWriter, r *http.Request) {
+
+	var err error
+	_ = err
+
+	// ------------- Path parameter "listen_id" -------------
+	var listenId openapi_types.UUID
+
+	err = runtime.BindStyledParameterWithOptions("simple", "listen_id", r.PathValue("listen_id"), &listenId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true, Type: "string", Format: "uuid", ValueIsUnescaped: true})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "listen_id", Err: err})
+		return
+	}
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.GetListen(w, r, listenId)
 	}))
 
 	for _, middleware := range siw.HandlerMiddlewares {
@@ -170,8 +956,50 @@ func HandlerWithOptions(si ServerInterface, options StdHTTPServerOptions) http.H
 	}
 
 	m.HandleFunc(http.MethodGet+" "+options.BaseURL+"/hello", wrapper.GetHello)
+	m.HandleFunc(http.MethodGet+" "+options.BaseURL+"/listens", wrapper.GetListens)
+	m.HandleFunc(http.MethodGet+" "+options.BaseURL+"/listens/{listen_id}", wrapper.GetListen)
+	m.HandleFunc(http.MethodPost+" "+options.BaseURL+"/1/submit-listens", wrapper.SubmitListens)
 
 	return m
+}
+
+type SubmitListensRequestObject struct {
+	Params SubmitListensParams
+	Body   *SubmitListensJSONRequestBody
+}
+
+type SubmitListensResponseObject interface {
+	VisitSubmitListensResponse(w http.ResponseWriter) error
+}
+
+type SubmitListens200JSONResponse = SubmitListens200JSONResponseBody
+
+func (response SubmitListens200JSONResponse) VisitSubmitListensResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
+type SubmitListens400Response struct {
+}
+
+func (response SubmitListens400Response) VisitSubmitListensResponse(w http.ResponseWriter) error {
+	w.WriteHeader(400)
+	return nil
+}
+
+type SubmitListens401Response struct {
+}
+
+func (response SubmitListens401Response) VisitSubmitListensResponse(w http.ResponseWriter) error {
+	w.WriteHeader(401)
+	return nil
 }
 
 type GetHelloRequestObject struct {
@@ -195,11 +1023,63 @@ func (response GetHello200JSONResponse) VisitGetHelloResponse(w http.ResponseWri
 	return err
 }
 
+type GetListensRequestObject struct {
+}
+
+type GetListensResponseObject interface {
+	VisitGetListensResponse(w http.ResponseWriter) error
+}
+
+type GetListens200JSONResponse ListListensResponse
+
+func (response GetListens200JSONResponse) VisitGetListensResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
+type GetListenRequestObject struct {
+	ListenId openapi_types.UUID `json:"listen_id"`
+}
+
+type GetListenResponseObject interface {
+	VisitGetListenResponse(w http.ResponseWriter) error
+}
+
+type GetListen200JSONResponse Listen
+
+func (response GetListen200JSONResponse) VisitGetListenResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
 // StrictServerInterface represents all server handlers.
 type StrictServerInterface interface {
+	// SubmitListens Submit completed, historical, or currently playing listens
+	// (POST /1/submit-listens)
+	SubmitListens(ctx context.Context, request SubmitListensRequestObject) (SubmitListensResponseObject, error)
 	// GetHello Say hello
 	// (GET /hello)
 	GetHello(ctx context.Context, request GetHelloRequestObject) (GetHelloResponseObject, error)
+	// GetListens Get all listens
+	// (GET /listens)
+	GetListens(ctx context.Context, request GetListensRequestObject) (GetListensResponseObject, error)
+	// GetListen Get a listen by ID
+	// (GET /listens/{listen_id})
+	GetListen(ctx context.Context, request GetListenRequestObject) (GetListenResponseObject, error)
 }
 
 type StrictHandlerFunc func(ctx context.Context, w http.ResponseWriter, r *http.Request, request any) (any, error)
@@ -241,6 +1121,39 @@ type strictHandler struct {
 	options     StrictHTTPServerOptions
 }
 
+// SubmitListens operation middleware
+func (sh *strictHandler) SubmitListens(w http.ResponseWriter, r *http.Request, params SubmitListensParams) {
+	var request SubmitListensRequestObject
+
+	request.Params = params
+
+	var body SubmitListensJSONRequestBody
+	if err := runtime.BindJSONBody(r, &body); err != nil {
+		sh.options.RequestErrorHandlerFunc(w, r, fmt.Errorf("can't decode JSON body: %w", err))
+		return
+	}
+	request.Body = &body
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.SubmitListens(ctx, request.(SubmitListensRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "SubmitListens")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(SubmitListensResponseObject); ok {
+		if err := validResponse.VisitSubmitListensResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
 // GetHello operation middleware
 func (sh *strictHandler) GetHello(w http.ResponseWriter, r *http.Request) {
 	var request GetHelloRequestObject
@@ -258,6 +1171,56 @@ func (sh *strictHandler) GetHello(w http.ResponseWriter, r *http.Request) {
 		sh.options.ResponseErrorHandlerFunc(w, r, err)
 	} else if validResponse, ok := response.(GetHelloResponseObject); ok {
 		if err := validResponse.VisitGetHelloResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// GetListens operation middleware
+func (sh *strictHandler) GetListens(w http.ResponseWriter, r *http.Request) {
+	var request GetListensRequestObject
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.GetListens(ctx, request.(GetListensRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "GetListens")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(GetListensResponseObject); ok {
+		if err := validResponse.VisitGetListensResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// GetListen operation middleware
+func (sh *strictHandler) GetListen(w http.ResponseWriter, r *http.Request, listenId openapi_types.UUID) {
+	var request GetListenRequestObject
+
+	request.ListenId = listenId
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.GetListen(ctx, request.(GetListenRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "GetListen")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(GetListenResponseObject); ok {
+		if err := validResponse.VisitGetListenResponse(w); err != nil {
 			sh.options.ResponseErrorHandlerFunc(w, r, err)
 		}
 	} else if response != nil {

@@ -1,0 +1,7 @@
+apis:
+  mnemosyne:
+    root: ./api/openapi.yaml
+    output: ./api/openapi.bundled.yaml
+
+extends:
+  - spec

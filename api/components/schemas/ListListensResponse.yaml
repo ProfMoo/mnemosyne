@@ -1,0 +1,8 @@
+type: object
+required:
+  - listens
+properties:
+  listens:
+    type: array
+    items:
+      $ref: "../../openapi.yaml#/components/schemas/Listen"

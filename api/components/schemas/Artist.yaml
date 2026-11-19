@@ -1,0 +1,14 @@
+type: object
+required:
+  - name
+  - id
+  - mbid
+properties:
+  name:
+    type: string
+  id:
+    type: string
+    format: uuid
+  mbid:
+    type: string
+    format: uuid

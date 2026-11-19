@@ -1,0 +1,13 @@
+type: object
+required:
+  - artist_name
+  - track_name
+properties:
+  artist_name:
+    type: string
+  track_name:
+    type: string
+  release_name:
+    type: string
+  additional_info:
+    $ref: '../../openapi.yaml#/components/schemas/AdditionalInfo'

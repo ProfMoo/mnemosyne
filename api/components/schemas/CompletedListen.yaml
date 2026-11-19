@@ -1,0 +1,11 @@
+type: object
+required:
+  - listened_at
+  - track_metadata
+properties:
+  listened_at:
+    type: integer
+    minimum: 1033430400
+    description: Unix epoch seconds at playback start.
+  track_metadata:
+    $ref: '../../openapi.yaml#/components/schemas/TrackMetadata'

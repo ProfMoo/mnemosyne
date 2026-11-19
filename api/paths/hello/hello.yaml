@@ -1,0 +1,10 @@
+get:
+  operationId: getHello
+  summary: Say hello
+  responses:
+    "200":
+      description: A hello world greeting.
+      content:
+        application/json:
+          schema:
+            $ref: "../../openapi.yaml#/components/schemas/HelloResponse"

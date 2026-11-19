@@ -1,0 +1,31 @@
+rules:
+  component-name-no-double-underscore:
+    description: Component names must not contain double underscores.
+    severity: error
+    resolved: false
+    given: "$.components.*"
+    then:
+      function: schema
+      functionOptions:
+        schema:
+          type: object
+          propertyNames:
+            pattern: "^(?!.*__).*$"
+  schema-property-example-required:
+    description: Typed schema properties must include example or nonempty examples.
+    severity: warn
+    resolved: true
+    given: "$..properties[?(@.type)]"
+    then:
+      function: schema
+      functionOptions:
+        schema:
+          anyOf:
+            - required:
+                - example
+            - required:
+                - examples
+              properties:
+                examples:
+                  type: array
+                  minItems: 1

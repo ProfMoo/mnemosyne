@@ -5,134 +5,40 @@ info:
   description: API for Mnemosyne
 paths:
   /hello:
-    get:
-      operationId: getHello
-      summary: Say hello
-      responses:
-        "200":
-          description: A hello world greeting.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/HelloResponse"
+    $ref: "./paths/hello/hello.yaml"
   /listens:
-    get:
-      operationId: getListens
-      summary: Get all listens
-      responses:
-        "200":
-          description: A list of listens.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ListListensResponse"
+    $ref: "./paths/listens/listens.yaml"
   /listens/{listen_id}:
-    get:
-      operationId: getListen
-      summary: Get a listen by ID
-      responses:
-        "200":
-          description: A listen.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GetListenResponse"
+    $ref: "./paths/listens/listen-by-id.yaml"
+  # The ListenBrainz compatible endpoint.
+  /1/submit-listens:
+    $ref: "./paths/listens/submit-listens.yaml"
 components:
+  securitySchemes:
+    ListenBrainzToken:
+      $ref: "./components/securitySchemas/ListenBrainzToken.yaml"
   schemas:
     HelloResponse:
-      type: object
-      required:
-        - message
-      properties:
-        message:
-          type: string
-          examples:
-            - Hello, World!
+      $ref: "./components/schemas/HelloResponse.yaml"
     ListListensResponse:
-      type: object
-      required:
-        - listens
-      properties:
-        listens:
-          type: array
-          items:
-            $ref: "#/components/schemas/Listen"
+      $ref: "./components/schemas/ListListensResponse.yaml"
     GetListenResponse:
-      $ref: "#/components/schemas/Listen"
+      $ref: "./components/schemas/GetListenResponse.yaml"
     Listen:
-      type: object
-      required:
-        - id
-        - artists
-        - albumArtists
-        - album
-        - track
-        - startedAt
-        - endedAt
-      properties:
-        id:
-          type: string
-          format: uuid
-        artists:
-          type: array
-          items:
-            $ref: "#/components/schemas/Artist"
-        albumArtists:
-          type: array
-          items:
-            $ref: "#/components/schemas/Artist"
-        album:
-          type: object
-          required:
-            - name
-            - id
-            - mbid
-          properties:
-            name:
-              type: string
-            id:
-              type: string
-              format: uuid
-            mbid:
-              type: string
-              format: uuid
-        track:
-          type: object
-          required:
-            - name
-            - id
-            - mbid
-          properties:
-            name:
-              type: string
-            id:
-              type: string
-              format: uuid
-            mbid:
-              type: string
-              format: uuid
-        startedAt:
-          type: string
-          format: date-time
-          example: 2026-01-01T00:00:00Z
-          description: The time the listen started. UTC ISO 8601 format.
-        endedAt:
-          type: string
-          format: date-time
-          example: 2026-01-01T00:00:00Z
-          description: The time the listen ended. UTC ISO 8601 format.
+      $ref: "./components/schemas/Listen.yaml"
     Artist:
-      type: object
-      required:
-        - name
-        - id
-        - mbid
-      properties:
-        name:
-          type: string
-        id:
-          type: string
-          format: uuid
-        mbid:
-          type: string
-          format: uuid
+      $ref: "./components/schemas/Artist.yaml"
+    SingleSubmission:
+      $ref: "./components/schemas/SingleSubmission.yaml"
+    ImportSubmission:
+      $ref: "./components/schemas/ImportSubmission.yaml"
+    PlayingNowSubmission:
+      $ref: "./components/schemas/PlayingNowSubmission.yaml"
+    CompletedListen:
+      $ref: "./components/schemas/CompletedListen.yaml"
+    PlayingNowListen:
+      $ref: "./components/schemas/PlayingNowListen.yaml"
+    TrackMetadata:
+      $ref: "./components/schemas/TrackMetadata.yaml"
+    AdditionalInfo:
+      $ref: "./components/schemas/AdditionalInfo.yaml"

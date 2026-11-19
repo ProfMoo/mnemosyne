@@ -1,0 +1,4 @@
+type: apiKey
+in: header
+name: Authorization
+description: 'Value has the form: Token YOUR_USER_TOKEN'

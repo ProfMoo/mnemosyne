@@ -1,0 +1,61 @@
+type: object
+required:
+  - id
+  - artists
+  - albumArtists
+  - album
+  - track
+  - startedAt
+  - endedAt
+properties:
+  id:
+    type: string
+    format: uuid
+  artists:
+    type: array
+    items:
+      $ref: "../../openapi.yaml#/components/schemas/Artist"
+  albumArtists:
+    type: array
+    items:
+      $ref: "../../openapi.yaml#/components/schemas/Artist"
+  album:
+    type: object
+    required:
+      - name
+      - id
+      - mbid
+    properties:
+      name:
+        type: string
+      id:
+        type: string
+        format: uuid
+      mbid:
+        type: string
+        format: uuid
+  track:
+    type: object
+    required:
+      - name
+      - id
+      - mbid
+    properties:
+      name:
+        type: string
+      id:
+        type: string
+        format: uuid
+      mbid:
+        type: string
+        format: uuid
+  startedAt:
+    type: string
+    format: date-time
+    example: 2026-01-01T00:00:00Z
+    description: The time the listen started. UTC ISO 8601 format.
+  endedAt:
+    type: string
+    format: date-time
+    example: 2026-01-01T00:00:00Z
+    description: The time the listen ended. UTC ISO 8601 format.

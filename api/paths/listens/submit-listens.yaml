@@ -1,0 +1,45 @@
+# ListenBrainz compatible endpoint.
+post:
+  operationId: submitListens
+  summary: Submit completed, historical, or currently playing listens
+  security:
+    - ListenBrainzToken: []
+  parameters:
+    - name: return_msid
+      in: query
+      required: false
+      description: When true for playing_now, include a recording MSID in the response.
+      schema:
+        type: boolean
+        default: false
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          oneOf:
+            - $ref: '../../openapi.yaml#/components/schemas/SingleSubmission'
+            - $ref: '../../openapi.yaml#/components/schemas/ImportSubmission'
+            - $ref: '../../openapi.yaml#/components/schemas/PlayingNowSubmission'
+  responses:
+    '200':
+      description: Listen(s) accepted
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: ok
+              recording_msid:
+                type: string
+                format: uuid
+                description: May be returned with playing_now and return_msid=true.
+            required:
+              - status
+            additionalProperties: true
+    '400':
+      description: Invalid submission
+    '401':
+      description: Invalid or missing user token

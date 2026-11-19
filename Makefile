@@ -15,8 +15,15 @@ run: build
 run-dev:
 	go run ./$(MAIN_PACKAGE)
 
+.PHONY: lint-api
+lint-api:
+	npx --yes @redocly/cli@2.80.0 lint
+	npx --yes @stoplight/spectral-cli@6.17.1 lint api/openapi.yaml
+
 .PHONY: gen
-gen:
+gen: lint-api
+	rm -rf api/gen
+	rm api/openapi.bundled.yaml
 	go generate ./...
 
 .PHONY: clean
