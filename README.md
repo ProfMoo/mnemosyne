@@ -7,6 +7,7 @@ Your full music listening history, on your own hardware, forever.
 ```sh
 make run-dev
 
+curl http://localhost:8080/hello
 ```
 
 ## Purpose
@@ -66,4 +67,4 @@ The reality of self-hosting music apps is that: MusicBrainz is the only good mus
 
 Honestly, there are good alternatives out there. These are some slight upgrades to be had in this space, outlined above. But primarily I've chosen to write this as a fun personal project 🙂
 
-I have been writing code professionally for over a decade. I basically have no choice but to use AI to write all my code at work... and I don't see that changing anytime soon. This project is meant to be a way for me to still spend time on the nitty gritty code. I'll still use AI, especially for undifferentiated heavy lifting and boring tasks. But the design and the core functionality will be all grass fed, organize, hand-written code like the times of yor. I miss it.
+I have been writing code professionally for over a decade. I basically have no choice but to use AI to write all my code at work... and I don't see that changing anytime soon. This project is meant to be a way for me to still spend time on the nitty gritty code. I'll still use AI, especially for undifferentiated heavy lifting and boring tasks. But the design and the core functionality will be all grass fed, organic, hand-written code like the times of yor. I miss it.
