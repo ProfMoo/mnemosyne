@@ -17,6 +17,16 @@
     ],
     "go.alternateTools": {
         "go": "/Users/drmoo/.local/share/mise/shims/go",
-        "dlv": "/Users/drmoo/.local/share/mise/shims/dlv"
+        "dlv": "/Users/drmoo/.local/share/mise/shims/dlv",
+        "customFormatter": "/Users/drmoo/.local/share/mise/shims/go"
     },
+    "go.lintOnSave": "off",
+    "go.formatTool": "custom",
+    "go.formatFlags": [
+        "tool",
+        "golangci-lint",
+        "fmt",
+        "--stdin",
+        "--config=${workspaceFolder}/.golangci.yaml"
+    ],
 }

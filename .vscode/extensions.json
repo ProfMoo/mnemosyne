@@ -1,6 +1,7 @@
 {
     "recommendations": [
         "hverlin.mise-vscode",
-        "golang.go"
+        "golang.go",
+        "redhat.vscode-yaml"
     ]
 }

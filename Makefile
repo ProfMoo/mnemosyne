@@ -20,6 +20,18 @@ lint-api:
 	npx --yes @redocly/cli@2.80.0 lint
 	npx --yes @stoplight/spectral-cli@6.17.1 lint api/openapi.yaml
 
+.PHONY: lint
+lint:
+	go tool golangci-lint run ./...
+
+.PHONY: fmt
+fmt:
+	go tool golangci-lint fmt ./...
+
+.PHONY: fmt-check
+fmt-check:
+	go tool golangci-lint fmt --diff ./...
+
 .PHONY: gen
 gen: lint-api
 	rm -rf api/gen

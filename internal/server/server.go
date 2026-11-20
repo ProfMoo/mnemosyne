@@ -2,28 +2,59 @@ package server
 
 import (
 	"context"
-	"database/sql"
+	"log/slog"
 	"net/http"
+	"time"
+
+	"go.uber.org/fx"
 
 	"github.com/profmoo/mnemosyne/gen/api"
-	"github.com/profmoo/mnemosyne/gen/db"
+	"github.com/profmoo/mnemosyne/internal/config"
 )
 
-type server struct {
-	queries *db.Queries
-}
-
-var _ api.StrictServerInterface = server{}
-
 // NewHandler returns the HTTP handler for the Mnemosyne API.
-func NewHandler(database *sql.DB) http.Handler {
-	return api.Handler(api.NewStrictHandler(server{queries: db.New(database)}, nil))
+func NewServer(params NewServerParams) *http.Server {
+	strictHandler := api.NewStrictHandler(params.Handler, params.MiddlewareStack)
+
+	apiHandler := api.Handler(strictHandler)
+
+	apiServer := &http.Server{
+		Addr:              params.Config.BindAddress,
+		Handler:           apiHandler,
+		ReadHeaderTimeout: 5 * time.Second,
+	}
+	return apiServer
 }
 
-func (s server) GetHello(ctx context.Context, _ api.GetHelloRequestObject) (api.GetHelloResponseObject, error) {
-	message, err := s.queries.GetGreeting(ctx)
-	if err != nil {
-		return nil, err
+type NewServerParams struct {
+	fx.In
+
+	Handler *handler
+
+	Config *config.Config
+
+	MiddlewareStack []api.StrictMiddlewareFunc
+}
+
+func ConstructMiddlewareStack(params ConstructMiddlewareStackParams) []api.StrictMiddlewareFunc {
+	middlewares := []api.StrictMiddlewareFunc{}
+
+	middlewares = append(middlewares, params.LoggingMiddleware)
+
+	return middlewares
+}
+
+type ConstructMiddlewareStackParams struct {
+	fx.In
+
+	LoggingMiddleware api.StrictMiddlewareFunc
+}
+
+func NewLoggingMiddleware() api.StrictMiddlewareFunc {
+	return func(f api.StrictHandlerFunc, operationID string) api.StrictHandlerFunc {
+		return func(ctx context.Context, w http.ResponseWriter, r *http.Request, request any) (any, error) {
+			slog.Info("request", "url", r.URL.Path)
+			return f(ctx, w, r, request)
+		}
 	}
-	return api.GetHello200JSONResponse{Message: message}, nil
 }

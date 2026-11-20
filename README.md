@@ -17,6 +17,14 @@ make lint-api
 make gen
 ```
 
+## Go Linting And Formatting
+
+```bash
+make lint
+make fmt
+make fmt-check
+```
+
 ## Purpose
 
 Mnemosyne is meant to be a self-hosted, open-source, replacement for any music listening history (aka "scrobbling") solution. It's an alternative to [last.fm](https://www.last.fm/) (closed source), and [koito](https://github.com/gabehf/koito) and [maloja](https://github.com/krateng/maloja) (both open source).
