@@ -8,6 +8,12 @@ get:
         application/json:
           schema:
             $ref: "../../openapi.yaml#/components/schemas/GetListenResponse"
+    "500":
+      description: An error occurred.
+      content:
+        application/json:
+          schema:
+            $ref: "../../openapi.yaml#/components/schemas/ErrorResponse"
   parameters:
     - name: listen_id
       in: path

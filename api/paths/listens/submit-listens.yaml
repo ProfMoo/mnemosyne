@@ -43,3 +43,9 @@ post:
       description: Invalid submission
     '401':
       description: Invalid or missing user token
+    '500':
+      description: An error occurred.
+      content:
+        application/json:
+          schema:
+            $ref: "../../openapi.yaml#/components/schemas/ErrorResponse"

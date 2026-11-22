@@ -3,7 +3,7 @@ BUILD_DIR=bin
 MAIN_PACKAGE=cmd/mnemosyne
 
 .PHONY: build
-build:
+build: gen
 	@mkdir -p $(BUILD_DIR)
 	go build -o $(BUILD_DIR)/$(BINARY_NAME) $(MAIN_PACKAGE)/main.go
 
@@ -12,12 +12,12 @@ run: build
 	./$(BUILD_DIR)/$(BINARY_NAME)
 
 .PHONY: run-dev
-run-dev:
+run-dev: gen
 	go run ./$(MAIN_PACKAGE)
 
 .PHONY: lint-api
 lint-api:
-	npx --yes @redocly/cli@2.80.0 lint
+	REDOCLY_SUPPRESS_NOTIFICATIONS=true npx --yes @redocly/cli@2.80.0 lint
 	npx --yes @stoplight/spectral-cli@6.17.1 lint api/openapi.yaml
 
 .PHONY: lint

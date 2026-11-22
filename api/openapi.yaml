@@ -20,6 +20,8 @@ components:
   schemas:
     HelloResponse:
       $ref: "./components/schemas/HelloResponse.yaml"
+    ErrorResponse:
+      $ref: "./components/schemas/ErrorResponse.yaml"
     ListListensResponse:
       $ref: "./components/schemas/ListListensResponse.yaml"
     GetListenResponse:

@@ -1,0 +1,20 @@
+type: object
+required:
+  - code
+  - message
+properties:
+  code:
+    type: string
+    description: Machine-readable error identifier
+    example: VALIDATION_ERROR
+  message:
+    type: string
+    description: Human-readable summary of the error
+    example: Invalid email format
+  details:
+    type: object
+    additionalProperties:
+      type: string
+    description: Optional key-value map for field-level errors
+    example:
+      email: Must be a valid email address

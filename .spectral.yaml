@@ -15,7 +15,12 @@ rules:
     description: Typed schema properties must include example or nonempty examples.
     severity: warn
     resolved: true
-    given: "$..properties[?(@.type)]"
+    # /1/submit-listens is ListenBrainz spec compatible, so this project doesn't own that spec.
+    # Will allow that endpoint to be non-compliant generally, as maintaining compatibility is
+    # more important than having a consistent schema.
+    given:
+      - "$.paths[?(@property !== '/1/submit-listens')]..properties[?(@.type)]"
+      - "$.components.schemas[?(@property !== 'SingleSubmission' && @property !== 'ImportSubmission' && @property !== 'PlayingNowSubmission' && @property !== 'CompletedListen' && @property !== 'PlayingNowListen' && @property !== 'TrackMetadata' && @property !== 'AdditionalInfo')]..properties[?(@.type)]"
     then:
       function: schema
       functionOptions:

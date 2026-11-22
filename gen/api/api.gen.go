@@ -65,6 +65,18 @@ type CompletedListen struct {
 	TrackMetadata TrackMetadata `json:"track_metadata"`
 }
 
+// ErrorResponse defines model for ErrorResponse.
+type ErrorResponse struct {
+	// Code Machine-readable error identifier
+	Code string `json:"code"`
+
+	// Details Optional key-value map for field-level errors
+	Details *map[string]string `json:"details,omitempty"`
+
+	// Message Human-readable summary of the error
+	Message string `json:"message"`
+}
+
 // HelloResponse defines model for HelloResponse.
 type HelloResponse struct {
 	// Message Examples: Hello, World!
@@ -1002,6 +1014,20 @@ func (response SubmitListens401Response) VisitSubmitListensResponse(w http.Respo
 	return nil
 }
 
+type SubmitListens500JSONResponse ErrorResponse
+
+func (response SubmitListens500JSONResponse) VisitSubmitListensResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(500)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
 type GetHelloRequestObject struct {
 }
 
@@ -1044,6 +1070,20 @@ func (response GetListens200JSONResponse) VisitGetListensResponse(w http.Respons
 	return err
 }
 
+type GetListens500JSONResponse ErrorResponse
+
+func (response GetListens500JSONResponse) VisitGetListensResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(500)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
 type GetListenRequestObject struct {
 	ListenId openapi_types.UUID `json:"listen_id"`
 }
@@ -1062,6 +1102,20 @@ func (response GetListen200JSONResponse) VisitGetListenResponse(w http.ResponseW
 	}
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
+type GetListen500JSONResponse ErrorResponse
+
+func (response GetListen500JSONResponse) VisitGetListenResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(500)
 	_, err := buf.WriteTo(w)
 	return err
 }

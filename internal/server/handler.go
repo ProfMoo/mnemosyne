@@ -10,8 +10,6 @@ import (
 )
 
 type handler struct {
-	api.StrictServerInterface
-
 	queries *db_gen.Queries
 }
 
@@ -33,4 +31,28 @@ func (s *handler) GetHello(ctx context.Context, _ api.GetHelloRequestObject) (ap
 		return nil, err
 	}
 	return api.GetHello200JSONResponse{Message: message}, nil
+}
+
+func (s *handler) GetListen(ctx context.Context, _ api.GetListenRequestObject) (api.GetListenResponseObject, error) {
+	return api.GetListen500JSONResponse{
+		Code:    "NOT_IMPLEMENTED",
+		Message: "Not implemented",
+	}, nil
+}
+
+func (s *handler) GetListens(ctx context.Context, _ api.GetListensRequestObject) (api.GetListensResponseObject, error) {
+	return api.GetListens500JSONResponse{
+		Code:    "NOT_IMPLEMENTED",
+		Message: "Not implemented",
+	}, nil
+}
+
+func (s *handler) SubmitListens(
+	ctx context.Context,
+	_ api.SubmitListensRequestObject,
+) (api.SubmitListensResponseObject, error) {
+	return api.SubmitListens500JSONResponse{
+		Code:    "NOT_IMPLEMENTED",
+		Message: "Not implemented",
+	}, nil
 }
