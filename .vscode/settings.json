@@ -12,8 +12,11 @@
     ],
     "mise.configureExtensionsIncludeGlobalTools": false,
     "cSpell.words": [
-        "Brainz",
-        "scrobbling"
+        "brainz",
+        "scrobbling",
+        "scrobbles",
+        "scrobble",
+        "scrobbler",
     ],
     "go.alternateTools": {
         "go": "/Users/drmoo/.local/share/mise/shims/go",
