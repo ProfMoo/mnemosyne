@@ -1,0 +1,21 @@
+{
+  "listen_type": "playing_now",
+  "payload": [
+    {
+      "track_metadata": {
+        "artist_name": "Example Artist",
+        "track_name": "Streaming Example",
+        "release_name": "Example Album",
+        "additional_info": {
+          "music_service": "spotify.com",
+          "music_service_name": "Spotify",
+          "spotify_id": "https://open.spotify.com/track/0123456789ABCDEFGHIJKL",
+          "origin_url": "https://open.spotify.com/track/0123456789ABCDEFGHIJKL",
+          "duration_ms": 240000,
+          "submission_client": "MyScrobbler",
+          "submission_client_version": "1.0.0"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "listen_type": "import",
+  "payload": [
+    {
+      "listened_at": 1609545600,
+      "track_metadata": {
+        "artist_name": "Radiohead",
+        "track_name": "Everything in Its Right Place"
+      }
+    },
+    {
+      "listened_at": 1609545900,
+      "track_metadata": {
+        "artist_name": "Massive Attack",
+        "track_name": "Teardrop"
+      }
+    }
+  ]
+}

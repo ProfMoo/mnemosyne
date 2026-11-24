@@ -1,0 +1,12 @@
+{
+  "listen_type": "playing_now",
+  "payload": [
+    {
+      "track_metadata": {
+        "artist_name": "Massive Attack",
+        "track_name": "Teardrop",
+        "release_name": "Mezzanine"
+      }
+    }
+  ]
+}

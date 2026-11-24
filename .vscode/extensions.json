@@ -2,6 +2,9 @@
     "recommendations": [
         "hverlin.mise-vscode",
         "golang.go",
-        "redhat.vscode-yaml"
+        "redhat.vscode-yaml",
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "stylelint.vscode-stylelint"
     ]
 }

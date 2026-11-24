@@ -1,0 +1,22 @@
+{
+  "listen_type": "playing_now",
+  "payload": [
+    {
+      "track_metadata": {
+        "artist_name": "Daft Punk",
+        "track_name": "Digital Love",
+        "release_name": "Discovery",
+        "additional_info": {
+          "artist_mbids": [
+            "db92a151-1ac2-438b-bc43-b82e149ddd50"
+          ],
+          "recording_mbid": "10000000-0000-4000-8000-000000000001",
+          "release_mbid": "10000000-0000-4000-8000-000000000002",
+          "release_group_mbid": "10000000-0000-4000-8000-000000000003",
+          "track_mbid": "10000000-0000-4000-8000-000000000004",
+          "tracknumber": "3"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "listen_type": "playing_now",
+  "payload": [
+    {
+      "track_metadata": {
+        "artist_name": "Portishead",
+        "track_name": "Roads",
+        "release_name": "Dummy",
+        "additional_info": {
+          "duration_ms": 308000
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "listen_type": "import",
+  "payload": [
+    {
+      "listened_at": 1675209600,
+      "track_metadata": {
+        "artist_name": "Boards of Canada",
+        "track_name": "Roygbiv",
+        "release_name": "Music Has the Right to Children",
+        "additional_info": {
+          "duration": 151,
+          "duration_played": 151,
+          "media_player": "foobar2000",
+          "media_player_version": "2.0",
+          "submission_client": "LocalHistoryImporter",
+          "submission_client_version": "1.2.0"
+        }
+      }
+    },
+    {
+      "listened_at": 1675209780,
+      "track_metadata": {
+        "artist_name": "Aphex Twin",
+        "track_name": "Avril 14th",
+        "release_name": "Drukqs",
+        "additional_info": {
+          "duration": 125,
+          "duration_played": 125,
+          "media_player": "foobar2000",
+          "media_player_version": "2.0",
+          "submission_client": "LocalHistoryImporter",
+          "submission_client_version": "1.2.0"
+        }
+      }
+    }
+  ]
+}

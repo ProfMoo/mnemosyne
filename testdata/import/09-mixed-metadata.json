@@ -1,0 +1,36 @@
+{
+  "listen_type": "import",
+  "payload": [
+    {
+      "listened_at": 1706745600,
+      "track_metadata": {
+        "artist_name": "Portishead",
+        "track_name": "Roads"
+      }
+    },
+    {
+      "listened_at": 1706745960,
+      "track_metadata": {
+        "artist_name": "Nils Frahm & Ólafur Arnalds",
+        "track_name": "a2",
+        "release_name": "Trance Frendz",
+        "additional_info": {
+          "artist_mbids": [
+            "20000000-0000-4000-8000-000000000001",
+            "20000000-0000-4000-8000-000000000002"
+          ],
+          "duration_ms": 380000,
+          "tags": ["ambient", "modern classical"]
+        }
+      }
+    },
+    {
+      "listened_at": 1706746380,
+      "track_metadata": {
+        "artist_name": "Björk",
+        "track_name": "Jóga",
+        "release_name": "Homogenic"
+      }
+    }
+  ]
+}

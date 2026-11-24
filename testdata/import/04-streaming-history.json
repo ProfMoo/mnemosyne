@@ -1,0 +1,44 @@
+{
+  "listen_type": "import",
+  "payload": [
+    {
+      "listened_at": 1640995200,
+      "track_metadata": {
+        "artist_name": "Radiohead",
+        "track_name": "Everything in Its Right Place",
+        "release_name": "Kid A",
+        "additional_info": {
+          "duration_ms": 251000,
+          "music_service": "spotify.com",
+          "submission_client": "SpotifyHistoryImporter"
+        }
+      }
+    },
+    {
+      "listened_at": 1640995500,
+      "track_metadata": {
+        "artist_name": "Massive Attack",
+        "track_name": "Teardrop",
+        "release_name": "Mezzanine",
+        "additional_info": {
+          "duration_ms": 330000,
+          "music_service": "spotify.com",
+          "submission_client": "SpotifyHistoryImporter"
+        }
+      }
+    },
+    {
+      "listened_at": 1640995900,
+      "track_metadata": {
+        "artist_name": "Portishead",
+        "track_name": "Roads",
+        "release_name": "Dummy",
+        "additional_info": {
+          "duration_ms": 308000,
+          "music_service": "spotify.com",
+          "submission_client": "SpotifyHistoryImporter"
+        }
+      }
+    }
+  ]
+}

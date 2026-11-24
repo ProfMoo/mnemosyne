@@ -1,0 +1,23 @@
+{
+  "listen_type": "single",
+  "payload": [
+    {
+      "listened_at": 1794419220,
+      "track_metadata": {
+        "artist_name": "Björk",
+        "track_name": "Jóga",
+        "release_name": "Homogenic",
+        "additional_info": {
+          "media_player": "VLC",
+          "media_player_version": "3.0.21",
+          "submission_client": "LocalLibraryScrobbler",
+          "submission_client_version": "2.1.0",
+          "duration_ms": 305000,
+          "duration_played_ms": 280000,
+          "tracknumber": "2",
+          "tags": ["electronic", "art pop"]
+        }
+      }
+    }
+  ]
+}

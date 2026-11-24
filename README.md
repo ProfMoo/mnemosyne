@@ -4,10 +4,23 @@ Your full music listening history, on your own hardware, forever.
 
 ## Quickstart
 
+### Backend Only
+
 ```sh
 make run-dev
 
 curl http://localhost:8080/hello
+```
+
+### Backend + Frontend
+
+```sh
+# Backend — localhost:8080
+make run-dev
+# Frontend — localhost:5173
+cd frontend
+npm ci
+npm run dev
 ```
 
 ## API Linting And Generation

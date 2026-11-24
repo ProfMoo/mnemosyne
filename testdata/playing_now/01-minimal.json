@@ -1,0 +1,11 @@
+{
+  "listen_type": "playing_now",
+  "payload": [
+    {
+      "track_metadata": {
+        "artist_name": "Daft Punk",
+        "track_name": "One More Time"
+      }
+    }
+  ]
+}

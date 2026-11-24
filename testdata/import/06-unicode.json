@@ -1,0 +1,29 @@
+{
+  "listen_type": "import",
+  "payload": [
+    {
+      "listened_at": 1672531200,
+      "track_metadata": {
+        "artist_name": "坂本龍一",
+        "track_name": "戦場のメリークリスマス",
+        "release_name": "戦場のメリークリスマス"
+      }
+    },
+    {
+      "listened_at": 1672531500,
+      "track_metadata": {
+        "artist_name": "Björk",
+        "track_name": "Jóga",
+        "release_name": "Homogenic"
+      }
+    },
+    {
+      "listened_at": 1672531860,
+      "track_metadata": {
+        "artist_name": "Sigur Rós",
+        "track_name": "Svefn-g-englar",
+        "release_name": "Ágætis byrjun"
+      }
+    }
+  ]
+}

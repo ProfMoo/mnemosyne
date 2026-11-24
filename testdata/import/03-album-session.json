@@ -1,0 +1,41 @@
+{
+  "listen_type": "import",
+  "payload": [
+    {
+      "listened_at": 1612137600,
+      "track_metadata": {
+        "artist_name": "Daft Punk",
+        "track_name": "One More Time",
+        "release_name": "Discovery",
+        "additional_info": {
+          "tracknumber": "1",
+          "duration_ms": 320000
+        }
+      }
+    },
+    {
+      "listened_at": 1612137920,
+      "track_metadata": {
+        "artist_name": "Daft Punk",
+        "track_name": "Aerodynamic",
+        "release_name": "Discovery",
+        "additional_info": {
+          "tracknumber": "2",
+          "duration_ms": 212000
+        }
+      }
+    },
+    {
+      "listened_at": 1612138132,
+      "track_metadata": {
+        "artist_name": "Daft Punk",
+        "track_name": "Digital Love",
+        "release_name": "Discovery",
+        "additional_info": {
+          "tracknumber": "3",
+          "duration_ms": 301000
+        }
+      }
+    }
+  ]
+}

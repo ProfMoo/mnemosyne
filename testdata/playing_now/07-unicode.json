@@ -1,0 +1,16 @@
+{
+  "listen_type": "playing_now",
+  "payload": [
+    {
+      "track_metadata": {
+        "artist_name": "坂本龍一",
+        "track_name": "戦場のメリークリスマス",
+        "release_name": "戦場のメリークリスマス",
+        "additional_info": {
+          "duration_ms": 273000,
+          "tags": ["サウンドトラック", "piano"]
+        }
+      }
+    }
+  ]
+}

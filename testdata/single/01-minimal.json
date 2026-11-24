@@ -1,0 +1,12 @@
+{
+  "listen_type": "single",
+  "payload": [
+    {
+      "listened_at": 1794416400,
+      "track_metadata": {
+        "artist_name": "Daft Punk",
+        "track_name": "One More Time"
+      }
+    }
+  ]
+}

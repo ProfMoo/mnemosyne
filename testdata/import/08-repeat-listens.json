@@ -1,0 +1,29 @@
+{
+  "listen_type": "import",
+  "payload": [
+    {
+      "listened_at": 1704067200,
+      "track_metadata": {
+        "artist_name": "Daft Punk",
+        "track_name": "One More Time",
+        "release_name": "Discovery"
+      }
+    },
+    {
+      "listened_at": 1704067560,
+      "track_metadata": {
+        "artist_name": "Daft Punk",
+        "track_name": "One More Time",
+        "release_name": "Discovery"
+      }
+    },
+    {
+      "listened_at": 1704067920,
+      "track_metadata": {
+        "artist_name": "Daft Punk",
+        "track_name": "One More Time",
+        "release_name": "Discovery"
+      }
+    }
+  ]
+}
