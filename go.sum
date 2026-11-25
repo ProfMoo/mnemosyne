@@ -508,6 +508,8 @@ github.com/mattn/go-runewidth v0.0.24 h1:cpokDiIn0MGnhdHwuWnJBITySJ20QyNGnY2kR/a
 github.com/mattn/go-runewidth v0.0.24/go.mod h1:XBkDxAl56ILZc9knddidhrOlY5R/pDhgLpndooCuJAs=
 github.com/matttproud/golang_protobuf_extensions v1.0.1 h1:4hp9jkHxhMHkqkrB3Ix0jegS5sx/RkqARlsWZ6pIwiU=
 github.com/matttproud/golang_protobuf_extensions v1.0.1/go.mod h1:D8He9yQNgCq6Z5Ld7szi9bcBfOoFv/3dc6xSMkL2PC0=
+github.com/maxence-charriere/go-app/v11 v11.1.5 h1:04v5CJxMYwBy+lbqGcQR1N1Wr99RjQ0LmjQ8aQrvX2g=
+github.com/maxence-charriere/go-app/v11 v11.1.5/go.mod h1:8Wohj7eR7RseHI1WThlLUp1KUc3C2pLAlExATuN2n3s=
 github.com/mgechev/revive v1.17.1 h1:z8hV0L3uJ6yrwOMnJbkc5qBJpxXa2AxYKFKERGJyA4s=
 github.com/mgechev/revive v1.17.1/go.mod h1:FRd64pJwWSEE6j8ESoaX0PixPzjh2rpNSfckbEu3rIE=
 github.com/mitchellh/copystructure v1.2.0 h1:vpKXTN4ewci03Vljg/q9QvCGUDttBOGBIa15WveJJGw=

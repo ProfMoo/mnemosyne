@@ -2,9 +2,6 @@
 .agents
 .vscode
 bin
-frontend/node_modules
-frontend/dist
-frontend/coverage
 **/.env
 **/.env.local
 **/.env.*.local

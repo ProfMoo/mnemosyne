@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"embed"
+	"flag"
 	"log/slog"
 	"os"
 
@@ -19,7 +20,10 @@ var configFiles embed.FS
 func main() {
 	ctx := context.Background()
 
-	cfg, err := config.LoadConfig(configFiles, "config/config.yaml")
+	environment := flag.String("config", "local", "embedded config to load: local or docker")
+	flag.Parse()
+
+	cfg, err := config.LoadConfig(configFiles, "config/"+*environment+".yaml")
 	if err != nil {
 		slog.Error("load configuration", "error", err)
 		os.Exit(1)

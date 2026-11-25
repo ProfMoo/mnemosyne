@@ -29,7 +29,7 @@ func TestLoadConfig(t *testing.T) {
 		t.Run(test.name, func(t *testing.T) {
 			t.Parallel()
 
-			files := configFS("bindAddress: \"" + test.address + "\"\nfrontendDir: frontend/dist\napiPrefix: /api/\n")
+			files := configFS("bindAddress: \"" + test.address + "\"\nfrontendDir: bin/web\napiPrefix: /api/\n")
 			cfg, err := config.LoadConfig(files, configPath)
 			if err != nil {
 				t.Fatalf("load valid config: %v", err)
@@ -37,7 +37,7 @@ func TestLoadConfig(t *testing.T) {
 			if cfg.BindAddress != test.address {
 				t.Errorf("bind address = %q, want %q", cfg.BindAddress, test.address)
 			}
-			if cfg.FrontendDir != "frontend/dist" || cfg.APIPrefix != "/api/" {
+			if cfg.FrontendDir != "bin/web" || cfg.APIPrefix != "/api/" {
 				t.Errorf("unexpected frontend configuration: %+v", cfg)
 			}
 		})
@@ -65,14 +65,14 @@ func TestLoadConfigInvalidFrontendSettings(t *testing.T) {
 		yaml string
 	}{
 		{name: "missing directory", yaml: "apiPrefix: /api/"},
-		{name: "missing prefix", yaml: "frontendDir: frontend/dist"},
-		{name: "root prefix", yaml: "frontendDir: frontend/dist\napiPrefix: /"},
-		{name: "relative prefix", yaml: "frontendDir: frontend/dist\napiPrefix: api/"},
-		{name: "missing trailing slash", yaml: "frontendDir: frontend/dist\napiPrefix: /api"},
-		{name: "double trailing slash", yaml: "frontendDir: frontend/dist\napiPrefix: /api//"},
-		{name: "empty segment", yaml: "frontendDir: frontend/dist\napiPrefix: /api//v1/"},
-		{name: "route wildcard", yaml: "frontendDir: frontend/dist\napiPrefix: /{path}/"},
-		{name: "query string", yaml: "frontendDir: frontend/dist\napiPrefix: /api?query/"},
+		{name: "missing prefix", yaml: "frontendDir: bin/web"},
+		{name: "root prefix", yaml: "frontendDir: bin/web\napiPrefix: /"},
+		{name: "relative prefix", yaml: "frontendDir: bin/web\napiPrefix: api/"},
+		{name: "missing trailing slash", yaml: "frontendDir: bin/web\napiPrefix: /api"},
+		{name: "double trailing slash", yaml: "frontendDir: bin/web\napiPrefix: /api//"},
+		{name: "empty segment", yaml: "frontendDir: bin/web\napiPrefix: /api//v1/"},
+		{name: "route wildcard", yaml: "frontendDir: bin/web\napiPrefix: /{path}/"},
+		{name: "query string", yaml: "frontendDir: bin/web\napiPrefix: /api?query/"},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
 			t.Parallel()

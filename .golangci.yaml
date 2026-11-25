@@ -89,6 +89,38 @@ linters:
           deny:
             - pkg: "log$"
               desc: Use log/slog for structured logging.
+        frontend-api-only:
+          list-mode: lax
+          files:
+            - "**/internal/ui/**/*.go"
+            - "**/internal/frontendbuild/**/*.go"
+            - "**/cmd/frontend/**/*.go"
+            - "**/cmd/frontend-export/**/*.go"
+          deny:
+            - pkg: github.com/profmoo/mnemosyne/internal/config
+              desc: Frontend owns separate configuration.
+            - pkg: github.com/profmoo/mnemosyne/internal/server
+              desc: Access backend only through the generated HTTP client.
+            - pkg: github.com/profmoo/mnemosyne/internal/database
+              desc: Frontend must not access backend database code.
+            - pkg: github.com/profmoo/mnemosyne/internal/listens
+              desc: Frontend must not call backend services directly.
+            - pkg: github.com/profmoo/mnemosyne/db
+              desc: Frontend must not access backend storage.
+            - pkg: github.com/profmoo/mnemosyne/gen/api
+              desc: Use gen/client, not server bindings.
+        backend-static-only:
+          list-mode: lax
+          files:
+            - "**/cmd/mnemosyne/**/*.go"
+            - "**/internal/server/**/*.go"
+          deny:
+            - pkg: github.com/maxence-charriere/go-app
+              desc: Backend serves static files without go-app.
+            - pkg: github.com/profmoo/mnemosyne/internal/ui
+              desc: UI code belongs in the browser or build tools.
+            - pkg: github.com/profmoo/mnemosyne/internal/frontendbuild
+              desc: Export assets during build, not server runtime.
     cyclop:
       max-complexity: 10
       package-average: 5

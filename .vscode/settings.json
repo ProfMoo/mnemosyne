@@ -1,25 +1,7 @@
 {
-    "[typescript][typescriptreact][javascript][javascriptreact][json][jsonc][css][html]": {
-        "editor.defaultFormatter": "esbenp.prettier-vscode",
-        "editor.formatOnSave": true
-    },
-    "[typescript][typescriptreact][javascript][javascriptreact]": {
-        "editor.codeActionsOnSave": {
-            "source.fixAll.eslint": "explicit"
-        }
-    },
-    "eslint.workingDirectories": ["./frontend"],
-    "eslint.validate": ["javascript", "javascriptreact", "typescript", "typescriptreact"],
-    "eslint.useFlatConfig": true,
-    "typescript.tsdk": "frontend/node_modules/typescript/lib",
-    "js/ts.tsdk.promptToUseWorkspaceVersion": true,
-    "stylelint.validate": ["css"],
-    "stylelint.configFile": "${workspaceFolder}/frontend/.stylelintrc.json",
-    "stylelint.stylelintPath": "${workspaceFolder}/frontend/node_modules/stylelint",
-    "css.validate": false,
+    "css.validate": true,
     "files.watcherExclude": {
-        "**/frontend/node_modules/**": true,
-        "**/frontend/dist/**": true
+        "**/bin/web/**": true
     },
     "[go]": {
         "editor.defaultFormatter": "golang.go",

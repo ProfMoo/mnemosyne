@@ -4,6 +4,7 @@ import (
 	"context"
 	"log/slog"
 	"net/http"
+	"os"
 	"strings"
 	"time"
 
@@ -23,7 +24,8 @@ func NewServer(params NewServerParams) *http.Server {
 	prefixedAPI := http.StripPrefix(strings.TrimSuffix(params.Config.APIPrefix, "/"), api.Handler(strictHandler))
 	mux.Handle(params.Config.APIPrefix, prefixedAPI)
 	// Serve static files on the root path.
-	mux.Handle("/", http.FileServer(http.Dir(params.Config.FrontendDir)))
+	static := os.DirFS(params.Config.FrontendDir)
+	mux.Handle("/", http.FileServer(http.FS(static)))
 
 	apiServer := &http.Server{
 		Addr:              params.Config.BindAddress,

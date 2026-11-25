@@ -1,13 +1,14 @@
 BINARY_NAME=mnemosyne
 BUILD_DIR=bin
 MAIN_PACKAGE=cmd/mnemosyne
+GOLANGCI_LINT = $(shell go tool -n golangci-lint)
 DOCKER_IMAGE ?= mnemosyne
 DOCKER_CONTAINER ?= mnemosyne
 DOCKER_PORT ?= 8080
 DOCKER_VOLUME ?= mnemosyne-data
 
 .PHONY: build
-build: gen
+build: gen frontend-build
 	@mkdir -p $(BUILD_DIR)
 	go build -o $(BUILD_DIR)/$(BINARY_NAME) $(MAIN_PACKAGE)/main.go
 
@@ -16,7 +17,7 @@ run: build
 	./$(BUILD_DIR)/$(BINARY_NAME)
 
 .PHONY: run-dev
-run-dev: gen
+run-dev: gen frontend-build
 	go run ./$(MAIN_PACKAGE)
 
 .PHONY: lint-api
@@ -27,6 +28,7 @@ lint-api:
 .PHONY: lint
 lint:
 	go tool golangci-lint run ./...
+	GOOS=js GOARCH=wasm "$(GOLANGCI_LINT)" run ./internal/ui/... ./cmd/frontend/...
 
 .PHONY: fmt
 fmt:
@@ -38,8 +40,6 @@ fmt-check:
 
 .PHONY: gen
 gen: lint-api
-	rm -rf api/gen
-	rm api/openapi.bundled.yaml
 	go generate ./...
 
 .PHONY: clean
@@ -50,22 +50,9 @@ clean:
 test:
 	go test -v ./...
 
-.PHONY: frontend-install frontend-dev frontend-gen frontend-check frontend-build
-frontend-install:
-	npm --prefix frontend ci
-
-frontend-dev:
-	npm --prefix frontend run dev
-
-frontend-gen:
-	npm --prefix frontend run generate
-
-frontend-check:
-	npm --prefix frontend run generate:check
-	npm --prefix frontend run check
-
+.PHONY: frontend-build
 frontend-build:
-	npm --prefix frontend run build
+	go run ./cmd/frontend-export
 
 .PHONY: docker-start docker-stop
 docker-start:

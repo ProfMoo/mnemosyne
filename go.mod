@@ -9,6 +9,7 @@ require (
 	github.com/knadh/koanf/parsers/yaml v1.1.1
 	github.com/knadh/koanf/providers/rawbytes v1.0.1
 	github.com/knadh/koanf/v2 v2.4.1
+	github.com/maxence-charriere/go-app/v11 v11.1.5
 	github.com/oapi-codegen/runtime v1.9.0
 	go.uber.org/fx v1.24.0
 	modernc.org/sqlite v1.62.0

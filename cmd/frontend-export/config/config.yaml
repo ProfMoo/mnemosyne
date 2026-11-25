@@ -1,0 +1,3 @@
+outputDir: "bin/web"
+resourceDir: "internal/ui"
+apiPrefix: "/api/"
