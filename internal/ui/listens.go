@@ -10,6 +10,10 @@ import (
 type Listens struct {
 	app.Compo
 
+	// mountCtx is bound to this component; event contexts are bound to their
+	// source element and drop dispatches once that element unmounts.
+	mountCtx app.Context
+
 	Failure error
 	Result  ListenResult
 	Loading bool
@@ -25,7 +29,8 @@ func RegisterRoutes() {
 //nolint:gocritic // go-app requires app.Context by value in lifecycle methods.
 func (page *Listens) OnMount(ctx app.Context) {
 	if app.IsClient {
-		page.load(&ctx)
+		page.mountCtx = ctx
+		page.load()
 	}
 }
 
@@ -53,11 +58,12 @@ func (page *Listens) Render() app.UI {
 }
 
 //nolint:gocritic // go-app requires app.Context by value in event handlers.
-func (page *Listens) retry(ctx app.Context, _ app.Event) {
-	page.load(&ctx)
+func (page *Listens) retry(_ app.Context, _ app.Event) {
+	page.load()
 }
 
-func (page *Listens) load(ctx *app.Context) {
+func (page *Listens) load() {
+	ctx := page.mountCtx
 	page.Loading = true
 	page.Failure = nil
 	page.Result = ListenResult{}
