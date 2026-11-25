@@ -42,7 +42,10 @@ Neither is imported by the backend: runtime uses only
 Each application owns separate configuration:
 
 - Backend: `cmd/mnemosyne/config/local.yaml` and `docker.yaml` (`bindAddress`,
-  `frontendDir`, `apiPrefix`), selected with `-config` (default `local`).
+  `frontendDir`, `apiPrefix`), selected with `-config config/local.yaml`
+  (default `config/local.yaml`). Paths are relative to the embedded filesystem,
+  not the process working directory; values are used literally without adding
+  a directory or extension.
 - Frontend exporter: `cmd/frontend-export/config/config.yaml` (`outputDir`,
   `resourceDir`, `apiPrefix`).
 - Browser: exported `web/config.json`, containing only the frontend API prefix.

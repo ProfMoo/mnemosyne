@@ -20,10 +20,10 @@ var configFiles embed.FS
 func main() {
 	ctx := context.Background()
 
-	environment := flag.String("config", "local", "embedded config to load: local or docker")
+	configPath := flag.String("config", "config/local.yaml", "full path to an embedded configuration file")
 	flag.Parse()
 
-	cfg, err := config.LoadConfig(configFiles, "config/"+*environment+".yaml")
+	cfg, err := config.LoadConfig(configFiles, *configPath)
 	if err != nil {
 		slog.Error("load configuration", "error", err)
 		os.Exit(1)

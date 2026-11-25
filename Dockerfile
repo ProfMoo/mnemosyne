@@ -18,4 +18,4 @@ WORKDIR /data
 USER mnemosyne
 VOLUME ["/data"]
 EXPOSE 8080
-ENTRYPOINT ["mnemosyne", "-config", "docker"]
+ENTRYPOINT ["mnemosyne", "-config", "config/docker.yaml"]

@@ -29,7 +29,8 @@ and tests. No separate JavaScript dependency pipeline.
   functionality as part of frontend setup.
 - Separate entry points own separate config files:
   - Backend: `cmd/mnemosyne/config/local.yaml` and `docker.yaml`, selected with
-    `-config` (default `local`).
+    `-config config/local.yaml` (default `config/local.yaml`). The flag takes
+    the full embedded filepath, not an environment name.
   - Frontend exporter: `cmd/frontend-export/config/config.yaml`.
   - Browser: exported `web/config.json`, containing public frontend settings only.
 - Never read backend configuration from the frontend or exporter. Configure
