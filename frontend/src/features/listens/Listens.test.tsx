@@ -2,6 +2,8 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
+import type { ListListensResponse } from '../../api/generated/models';
+import { env } from '../../lib/env';
 import { ListensPage } from '../../pages/ListensPage';
 
 function renderPage(): void {
@@ -27,8 +29,18 @@ describe('listens page', () => {
 
   it('calls the generated endpoint and displays its response', async () => {
     const body = {
-      listens: [{ id: 'listen-1', track: { name: 'Test track' } }],
-    };
+      listens: [
+        {
+          id: 'listen-1',
+          artists: [],
+          albumArtists: [],
+          album: { id: 'album-1', mbid: 'album-mbid', name: 'Test album' },
+          track: { id: 'track-1', mbid: 'track-mbid', name: 'Test track' },
+          startedAt: '2026-01-01T00:00:00Z',
+          endedAt: '2026-01-01T00:03:00Z',
+        },
+      ],
+    } satisfies ListListensResponse;
     const fetchMock = vi.fn().mockResolvedValue(Response.json(body));
     vi.stubGlobal('fetch', fetchMock);
     renderPage();
@@ -37,7 +49,7 @@ describe('listens page', () => {
       'Test track',
     );
     expect(fetchMock).toHaveBeenCalledWith(
-      '/api/listens',
+      `${env.apiBaseUrl}listens`,
       expect.objectContaining({ method: 'GET' }),
     );
     expect(screen.queryByRole('status')).not.toBeInTheDocument();

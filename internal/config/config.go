@@ -4,6 +4,7 @@ package config
 import (
 	"fmt"
 	"io/fs"
+	"regexp"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/go-viper/mapstructure/v2"
@@ -15,6 +16,8 @@ import (
 // Config contains the application settings.
 type Config struct {
 	BindAddress string `koanf:"bindAddress" validate:"required,hostname_port|tcp6_addr"`
+	FrontendDir string `koanf:"frontendDir" validate:"required"`
+	APIPrefix   string `koanf:"apiPrefix"   validate:"required"`
 }
 
 // LoadConfig reads a YAML file from configFiles and returns validated settings.
@@ -42,9 +45,18 @@ func LoadConfig(configFiles fs.FS, configLocation string) (*Config, error) {
 		return nil, fmt.Errorf("decode config %q: %w", configLocation, err)
 	}
 
-	if err := validator.New(validator.WithRequiredStructEnabled()).Struct(cfg); err != nil {
+	validation := validator.New(validator.WithRequiredStructEnabled())
+	validation.RegisterStructValidation(validateAPIPrefix, Config{})
+	if err := validation.Struct(cfg); err != nil {
 		return nil, fmt.Errorf("validate config %q: %w", configLocation, err)
 	}
 
 	return &cfg, nil
+}
+
+func validateAPIPrefix(validation validator.StructLevel) {
+	prefix := validation.Current().FieldByName("APIPrefix").String()
+	if !regexp.MustCompile(`^(/[A-Za-z0-9_-]+)+/$`).MatchString(prefix) {
+		validation.ReportError(prefix, "APIPrefix", "apiPrefix", "api_prefix", "")
+	}
 }

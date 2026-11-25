@@ -1,6 +1,10 @@
 BINARY_NAME=mnemosyne
 BUILD_DIR=bin
 MAIN_PACKAGE=cmd/mnemosyne
+DOCKER_IMAGE ?= mnemosyne
+DOCKER_CONTAINER ?= mnemosyne
+DOCKER_PORT ?= 8080
+DOCKER_VOLUME ?= mnemosyne-data
 
 .PHONY: build
 build: gen
@@ -45,3 +49,32 @@ clean:
 .PHONY: test
 test:
 	go test -v ./...
+
+.PHONY: frontend-install frontend-dev frontend-gen frontend-check frontend-build
+frontend-install:
+	npm --prefix frontend ci
+
+frontend-dev:
+	npm --prefix frontend run dev
+
+frontend-gen:
+	npm --prefix frontend run generate
+
+frontend-check:
+	npm --prefix frontend run generate:check
+	npm --prefix frontend run check
+
+frontend-build:
+	npm --prefix frontend run build
+
+.PHONY: docker-start docker-stop
+docker-start:
+	docker build -t $(DOCKER_IMAGE) .
+	docker run --detach --name $(DOCKER_CONTAINER) \
+		--publish $(DOCKER_PORT):8080 \
+		--mount type=volume,source=$(DOCKER_VOLUME),target=/data \
+		$(DOCKER_IMAGE)
+
+docker-stop:
+	docker stop $(DOCKER_CONTAINER)
+	docker rm $(DOCKER_CONTAINER)

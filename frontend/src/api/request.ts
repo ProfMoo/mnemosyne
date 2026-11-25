@@ -15,10 +15,7 @@ export async function request<T>(
   path: string,
   options: RequestInit,
 ): Promise<T> {
-  const response = await fetch(
-    `${env.apiBaseUrl.replace(/\/$/, '')}${path}`,
-    options,
-  );
+  const response = await fetch(`${env.apiBaseUrl}${path.slice(1)}`, options);
 
   if (!response.ok) {
     throw new ApiError(response.status, response.statusText);

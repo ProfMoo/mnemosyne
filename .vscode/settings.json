@@ -12,7 +12,7 @@
     "eslint.validate": ["javascript", "javascriptreact", "typescript", "typescriptreact"],
     "eslint.useFlatConfig": true,
     "typescript.tsdk": "frontend/node_modules/typescript/lib",
-    "typescript.enablePromptUseWorkspaceTsdk": true,
+    "js/ts.tsdk.promptToUseWorkspaceVersion": true,
     "stylelint.validate": ["css"],
     "stylelint.configFile": "${workspaceFolder}/frontend/.stylelintrc.json",
     "stylelint.stylelintPath": "${workspaceFolder}/frontend/node_modules/stylelint",

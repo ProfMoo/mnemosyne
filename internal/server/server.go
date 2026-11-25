@@ -4,6 +4,7 @@ import (
 	"context"
 	"log/slog"
 	"net/http"
+	"strings"
 	"time"
 
 	"go.uber.org/fx"
@@ -12,11 +13,17 @@ import (
 	"github.com/profmoo/mnemosyne/internal/config"
 )
 
-// NewHandler returns the HTTP handler for the Mnemosyne API.
+// NewServer returns the HTTP server for the Mnemosyne UI and API.
 func NewServer(params NewServerParams) *http.Server {
 	strictHandler := api.NewStrictHandler(params.Handler, params.MiddlewareStack)
 
-	apiHandler := api.Handler(strictHandler)
+	mux := http.NewServeMux()
+	apiHandler := api.HandlerFromMux(strictHandler, mux)
+	// Listen for API requests on the API prefix.
+	prefixedAPI := http.StripPrefix(strings.TrimSuffix(params.Config.APIPrefix, "/"), api.Handler(strictHandler))
+	mux.Handle(params.Config.APIPrefix, prefixedAPI)
+	// Serve static files on the root path.
+	mux.Handle("/", http.FileServer(http.Dir(params.Config.FrontendDir)))
 
 	apiServer := &http.Server{
 		Addr:              params.Config.BindAddress,

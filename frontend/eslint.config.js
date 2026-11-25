@@ -10,6 +10,10 @@ export default defineConfig(
   globalIgnores(['dist/**', 'coverage/**', 'src/api/generated/**']),
   js.configs.recommended,
   {
+    files: ['**/*.{js,mjs}'],
+    languageOptions: { globals: globals.node },
+  },
+  {
     files: ['**/*.{ts,tsx}'],
     extends: [
       tseslint.configs.strictTypeChecked,
