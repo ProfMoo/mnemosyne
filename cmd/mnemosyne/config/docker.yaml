@@ -1,3 +1,8 @@
 bindAddress: ":8080"
 frontendDir: "/app/web"
 apiPrefix: "/api/"
+musicBrainz:
+  endpoint: "https://musicbrainz.org"
+  userAgent: "mnemosyne/0.1 (https://github.com/profmoo/mnemosyne)"
+  requestTimeout: "10s"
+  requestInterval: "1s"

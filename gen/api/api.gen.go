@@ -136,6 +136,11 @@ type SingleSubmission struct {
 	Payload    []CompletedListen `json:"payload"`
 }
 
+// SubmitListensJSONBody defines model for SubmitListensJSONBody.
+type SubmitListensJSONBody struct {
+	union json.RawMessage
+}
+
 // TrackMetadata defines model for TrackMetadata.
 type TrackMetadata struct {
 	// AdditionalInfo All listed fields are optional. The ListenBrainz documentation explicitly permits other application-defined fields. Omit unavailable fields.
@@ -146,19 +151,14 @@ type TrackMetadata struct {
 	TrackName      string          `json:"track_name"`
 }
 
-// SubmitListensJSONBody defines parameters for SubmitListens.
-type SubmitListensJSONBody struct {
-	union json.RawMessage
-}
-
 // SubmitListensParams defines parameters for SubmitListens.
 type SubmitListensParams struct {
 	// ReturnMsid When true for playing_now, include a recording MSID in the response.
 	ReturnMsid *bool `form:"return_msid,omitempty" json:"return_msid,omitempty"`
 }
 
-// SubmitListens200JSONResponseBody defines parameters for SubmitListens.
-type SubmitListens200JSONResponseBody struct {
+// SubmitListens201JSONResponseBody defines parameters for SubmitListens.
+type SubmitListens201JSONResponseBody struct {
 	// RecordingMsid May be returned with playing_now and return_msid=true.
 	RecordingMsid        *openapi_types.UUID    `json:"recording_msid,omitempty"`
 	Status               string                 `json:"status"`
@@ -166,7 +166,7 @@ type SubmitListens200JSONResponseBody struct {
 }
 
 // SubmitListensJSONRequestBody defines body for SubmitListens for application/json ContentType.
-type SubmitListensJSONRequestBody SubmitListensJSONBody
+type SubmitListensJSONRequestBody = SubmitListensJSONBody
 
 // Getter for additional properties for AdditionalInfo. Returns the specified
 // element and whether it was found
@@ -566,25 +566,25 @@ func (a AdditionalInfo) MarshalJSON() ([]byte, error) {
 	return json.Marshal(object)
 }
 
-// Getter for additional properties for SubmitListens200JSONResponseBody. Returns the specified
+// Getter for additional properties for SubmitListens201JSONResponseBody. Returns the specified
 // element and whether it was found
-func (a SubmitListens200JSONResponseBody) Get(fieldName string) (value interface{}, found bool) {
+func (a SubmitListens201JSONResponseBody) Get(fieldName string) (value interface{}, found bool) {
 	if a.AdditionalProperties != nil {
 		value, found = a.AdditionalProperties[fieldName]
 	}
 	return
 }
 
-// Setter for additional properties for SubmitListens200JSONResponseBody
-func (a *SubmitListens200JSONResponseBody) Set(fieldName string, value interface{}) {
+// Setter for additional properties for SubmitListens201JSONResponseBody
+func (a *SubmitListens201JSONResponseBody) Set(fieldName string, value interface{}) {
 	if a.AdditionalProperties == nil {
 		a.AdditionalProperties = make(map[string]interface{})
 	}
 	a.AdditionalProperties[fieldName] = value
 }
 
-// Override default JSON handling for SubmitListens200JSONResponseBody to handle AdditionalProperties
-func (a *SubmitListens200JSONResponseBody) UnmarshalJSON(b []byte) error {
+// Override default JSON handling for SubmitListens201JSONResponseBody to handle AdditionalProperties
+func (a *SubmitListens201JSONResponseBody) UnmarshalJSON(b []byte) error {
 	object := make(map[string]json.RawMessage)
 	err := json.Unmarshal(b, &object)
 	if err != nil {
@@ -621,8 +621,8 @@ func (a *SubmitListens200JSONResponseBody) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// Override default JSON handling for SubmitListens200JSONResponseBody to handle AdditionalProperties
-func (a SubmitListens200JSONResponseBody) MarshalJSON() ([]byte, error) {
+// Override default JSON handling for SubmitListens201JSONResponseBody to handle AdditionalProperties
+func (a SubmitListens201JSONResponseBody) MarshalJSON() ([]byte, error) {
 	var err error
 	object := make(map[string]json.RawMessage)
 
@@ -984,16 +984,16 @@ type SubmitListensResponseObject interface {
 	VisitSubmitListensResponse(w http.ResponseWriter) error
 }
 
-type SubmitListens200JSONResponse = SubmitListens200JSONResponseBody
+type SubmitListens201JSONResponse = SubmitListens201JSONResponseBody
 
-func (response SubmitListens200JSONResponse) VisitSubmitListensResponse(w http.ResponseWriter) error {
+func (response SubmitListens201JSONResponse) VisitSubmitListensResponse(w http.ResponseWriter) error {
 
 	var buf bytes.Buffer
 	if err := json.NewEncoder(&buf).Encode(response); err != nil {
 		return err
 	}
 	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(200)
+	w.WriteHeader(201)
 	_, err := buf.WriteTo(w)
 	return err
 }

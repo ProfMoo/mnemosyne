@@ -30,6 +30,8 @@ components:
       $ref: "./components/schemas/Listen.yaml"
     Artist:
       $ref: "./components/schemas/Artist.yaml"
+    SubmitListensJSONBody:
+      $ref: "./components/schemas/SubmitListensJSONBody.yaml"
     SingleSubmission:
       $ref: "./components/schemas/SingleSubmission.yaml"
     ImportSubmission:

@@ -2,6 +2,7 @@ package server
 
 import (
 	"context"
+	"encoding/json"
 	"log/slog"
 	"net/http"
 	"os"
@@ -62,8 +63,32 @@ type ConstructMiddlewareStackParams struct {
 func NewLoggingMiddleware() api.StrictMiddlewareFunc {
 	return func(f api.StrictHandlerFunc, operationID string) api.StrictHandlerFunc {
 		return func(ctx context.Context, w http.ResponseWriter, r *http.Request, request any) (any, error) {
-			slog.Info("request", "url", r.URL.Path)
-			return f(ctx, w, r, request)
+			started := time.Now()
+			logger := slog.Default().With("operation", operationID, "method", r.Method, "path", r.URL.Path)
+			logger.LogAttrs(ctx, slog.LevelInfo, "request", logPayload(request))
+
+			response, err := f(ctx, w, r, request)
+			attrs := []slog.Attr{
+				slog.Duration("duration", time.Since(started)),
+				logPayload(response),
+			}
+			level := slog.LevelInfo
+			if err != nil {
+				level = slog.LevelError
+				attrs = append(attrs, slog.Any("error", err))
+			}
+			logger.LogAttrs(ctx, level, "response", attrs...)
+
+			return response, err
 		}
 	}
+}
+
+func logPayload(payload any) slog.Attr {
+	body, err := json.Marshal(payload)
+	if err != nil {
+		return slog.String("payload_error", err.Error())
+	}
+
+	return slog.String("payload", string(body))
 }

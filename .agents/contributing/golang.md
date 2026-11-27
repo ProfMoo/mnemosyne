@@ -184,6 +184,35 @@ These rules must be followed when fetching or creating data to/from the API surf
 * Organize files by "importance", descending. Start with consts, errors. Then the important interfaces and structs. Then the methods on the structs.
   * The file should "read" from top-to-bottom - when a method is mentioned in another method, that method should be just below it
   * When making a receiver method, put the receiver method below the struct definition
+* Use horizontal distance between distinct actions to make files easier to read. Example:
+
+    Good:
+
+    ```go
+    thing, err := DoThing(ctx)
+    if err != nil {
+        return err
+    }
+
+    thing2, err := DoThing(ctx)
+    if err != nil {
+        return err
+    }
+    ```
+
+    Bad:
+
+    ```go
+    thing, err := DoThing(ctx)
+    if err != nil {
+        return err
+    }
+    thing2, err := DoThing(ctx)
+    if err != nil {
+        return err
+    }
+    ```
+
 * Never create generic `interfaces.go`, `types.go`, `consts.go` files; use a name or location describing their domain purpose
 * Each package should be a discrete domain, such as: `address`, `urlvalidator`, or `errors`, `httpserver`.
 * All new packages in `internal` should be at the top-level. Do not create nested packages (i.e. `internal/foo/bar/baz`).

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/fs"
 	"regexp"
+	"time"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/go-viper/mapstructure/v2"
@@ -17,7 +18,17 @@ import (
 type Config struct {
 	BindAddress string `koanf:"bindAddress" validate:"required,hostname_port|tcp6_addr"`
 	FrontendDir string `koanf:"frontendDir" validate:"required"`
-	APIPrefix   string `koanf:"apiPrefix"   validate:"required"`
+	//nolint:revive // api_prefix is a registered field validator.
+	APIPrefix   string            `koanf:"apiPrefix"   validate:"required,api_prefix"`
+	MusicBrainz MusicBrainzConfig `koanf:"musicBrainz" validate:"required"`
+}
+
+// MusicBrainzConfig configures either the public API or a compatible self-hosted server.
+type MusicBrainzConfig struct {
+	Endpoint        string        `koanf:"endpoint"        validate:"required,http_url"`
+	UserAgent       string        `koanf:"userAgent"       validate:"required"`
+	RequestTimeout  time.Duration `koanf:"requestTimeout"  validate:"gt=0"`
+	RequestInterval time.Duration `koanf:"requestInterval" validate:"gte=0"`
 }
 
 // LoadConfig reads a YAML file from configFiles and returns validated settings.
@@ -39,6 +50,7 @@ func LoadConfig(configFiles fs.FS, configLocation string) (*Config, error) {
 			TagName:          "koanf",
 			ErrorUnused:      true,
 			WeaklyTypedInput: false,
+			DecodeHook:       mapstructure.StringToTimeDurationHookFunc(),
 		},
 	}
 	if err := settings.UnmarshalWithConf("", &cfg, unmarshalConf); err != nil {
@@ -46,7 +58,9 @@ func LoadConfig(configFiles fs.FS, configLocation string) (*Config, error) {
 	}
 
 	validation := validator.New(validator.WithRequiredStructEnabled())
-	validation.RegisterStructValidation(validateAPIPrefix, Config{})
+	if err := validation.RegisterValidation("api_prefix", validateAPIPrefix); err != nil {
+		return nil, fmt.Errorf("register API prefix validation: %w", err)
+	}
 	if err := validation.Struct(cfg); err != nil {
 		return nil, fmt.Errorf("validate config %q: %w", configLocation, err)
 	}
@@ -54,9 +68,6 @@ func LoadConfig(configFiles fs.FS, configLocation string) (*Config, error) {
 	return &cfg, nil
 }
 
-func validateAPIPrefix(validation validator.StructLevel) {
-	prefix := validation.Current().FieldByName("APIPrefix").String()
-	if !regexp.MustCompile(`^(/[A-Za-z0-9_-]+)+/$`).MatchString(prefix) {
-		validation.ReportError(prefix, "APIPrefix", "apiPrefix", "api_prefix", "")
-	}
+func validateAPIPrefix(validation validator.FieldLevel) bool {
+	return regexp.MustCompile(`^(/[A-Za-z0-9_-]+)+/$`).MatchString(validation.Field().String())
 }

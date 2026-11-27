@@ -3,6 +3,7 @@ package config_test
 import (
 	"errors"
 	"io/fs"
+	"strings"
 	"testing"
 	"testing/fstest"
 
@@ -82,6 +83,12 @@ func TestLoadConfigInvalidFrontendSettings(t *testing.T) {
 			if cfg != nil || !errors.As(err, &validationErrors) {
 				t.Fatalf("expected validation error and nil config, got %v, %v", cfg, err)
 			}
+			for _, validationError := range validationErrors {
+				if validationError.Field() == "APIPrefix" && validationError.Value() != "" &&
+					validationError.Tag() != "api_prefix" {
+					t.Errorf("expected api_prefix field validation, got %q", validationError.Tag())
+				}
+			}
 		})
 	}
 }
@@ -149,7 +156,11 @@ func TestLoadConfigMissingFile(t *testing.T) {
 }
 
 func configFS(contents string) fs.FS {
+	if strings.TrimSpace(contents) == "{}" {
+		contents = ""
+	}
+
 	return fstest.MapFS{
-		configPath: {Data: []byte(contents)},
+		configPath: {Data: []byte(contents + musicBrainzSettings)},
 	}
 }

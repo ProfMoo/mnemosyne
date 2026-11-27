@@ -17,12 +17,9 @@ post:
     content:
       application/json:
         schema:
-          oneOf:
-            - $ref: '../../openapi.yaml#/components/schemas/SingleSubmission'
-            - $ref: '../../openapi.yaml#/components/schemas/ImportSubmission'
-            - $ref: '../../openapi.yaml#/components/schemas/PlayingNowSubmission'
+          $ref: '../../openapi.yaml#/components/schemas/SubmitListensJSONBody'
   responses:
-    '200':
+    '201':
       description: Listen(s) accepted
       content:
         application/json:

@@ -5,12 +5,17 @@ import (
 	"embed"
 	"flag"
 	"log/slog"
+	"net/http"
 	"os"
+	"time"
 
 	"go.uber.org/fx"
 
 	"github.com/profmoo/mnemosyne/internal/config"
 	"github.com/profmoo/mnemosyne/internal/database"
+	"github.com/profmoo/mnemosyne/internal/matching"
+	"github.com/profmoo/mnemosyne/internal/musicbrainz"
+	"github.com/profmoo/mnemosyne/internal/repository"
 	"github.com/profmoo/mnemosyne/internal/server"
 )
 
@@ -32,16 +37,23 @@ func main() {
 	app := fx.New(
 		fx.Supply(
 			cfg,
+			cfg.MusicBrainz,
+			&http.Client{},
+			time.Now,
 			fx.Annotate(ctx, fx.As(new(context.Context))),
 		),
 		fx.Provide(
 			database.NewDatabaseClient,
 			database.NewDatabaseQuerier,
+			fx.Annotate(musicbrainz.NewClient, fx.As(new(matching.Catalog))),
+			fx.Annotate(matching.NewService, fx.As(new(matching.Matcher))),
 			server.NewServer,
 			server.NewHandler,
 			server.ConstructMiddlewareStack,
 			server.NewLoggingMiddleware,
+			server.NewSubmitHandler,
 		),
+		repository.Module,
 		fx.Invoke(server.RegisterServer),
 	)
 

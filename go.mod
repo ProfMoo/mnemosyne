@@ -11,7 +11,9 @@ require (
 	github.com/knadh/koanf/v2 v2.4.1
 	github.com/maxence-charriere/go-app/v11 v11.1.5
 	github.com/oapi-codegen/runtime v1.9.0
+	github.com/stretchr/testify v1.12.1
 	go.uber.org/fx v1.24.0
+	golang.org/x/text v0.43.0
 	modernc.org/sqlite v1.62.0
 )
 
@@ -232,7 +234,6 @@ require (
 	github.com/ssgreg/nlreturn/v2 v2.2.1 // indirect
 	github.com/stbenjam/no-sprintf-host-port v0.3.1 // indirect
 	github.com/stretchr/objx v0.5.3 // indirect
-	github.com/stretchr/testify v1.12.1 // indirect
 	github.com/subosito/gotenv v1.4.1 // indirect
 	github.com/tetafro/godot v1.5.6 // indirect
 	github.com/tetratelabs/wazero v1.11.0 // indirect
@@ -269,7 +270,6 @@ require (
 	golang.org/x/net v0.62.0 // indirect
 	golang.org/x/sync v0.25.0 // indirect
 	golang.org/x/sys v0.49.0 // indirect
-	golang.org/x/text v0.43.0 // indirect
 	golang.org/x/tools v0.52.0 // indirect
 	google.golang.org/genproto/googleapis/api v0.0.0-20260526163538-3dc84a4a5aaa // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20260819154853-08b0e4226688 // indirect

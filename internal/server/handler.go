@@ -10,19 +10,22 @@ import (
 )
 
 type handler struct {
-	queries *db_gen.Queries
+	queries       *db_gen.Queries
+	submitHandler *SubmitHandler
 }
 
 func NewHandler(params NewHandlerParams) *handler {
 	return &handler{
-		queries: params.Queries,
+		queries:       params.Queries,
+		submitHandler: params.SubmitHandler,
 	}
 }
 
 type NewHandlerParams struct {
 	fx.In
 
-	Queries *db_gen.Queries
+	Queries       *db_gen.Queries
+	SubmitHandler *SubmitHandler
 }
 
 func (s *handler) GetHello(ctx context.Context, _ api.GetHelloRequestObject) (api.GetHelloResponseObject, error) {
@@ -49,10 +52,7 @@ func (s *handler) GetListens(ctx context.Context, _ api.GetListensRequestObject)
 
 func (s *handler) SubmitListens(
 	ctx context.Context,
-	_ api.SubmitListensRequestObject,
+	req api.SubmitListensRequestObject,
 ) (api.SubmitListensResponseObject, error) {
-	return api.SubmitListens500JSONResponse{
-		Code:    "NOT_IMPLEMENTED",
-		Message: "Not implemented",
-	}, nil
+	return s.submitHandler.Handle(ctx, req)
 }
