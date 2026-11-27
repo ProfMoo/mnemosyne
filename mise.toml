@@ -3,6 +3,7 @@ go = "1.26"
 # Used for OpenAPI lint/bundle tools only; frontend builds use Go.
 "npm:npm" = "12.2.3"
 node = "26.13.1"
+"pipx:sqlfluff" = "4.5.0"
 
 [env]
 # Optional: Ensure Go uses the toolchain selected by mise instead of downloading a newer one automatically

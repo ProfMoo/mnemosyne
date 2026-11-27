@@ -2,6 +2,7 @@
     "recommendations": [
         "hverlin.mise-vscode",
         "golang.go",
-        "redhat.vscode-yaml"
+        "redhat.vscode-yaml",
+        "sqlfluff.vscode-sqlfluff"
     ]
 }

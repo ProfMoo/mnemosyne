@@ -1,8 +1,9 @@
+# yaml-language-server: $schema=https://www.schemastore.org/sqlc-2.0.json
 version: "2"
 sql:
   - engine: sqlite
-    schema: schema.sql
-    queries: query.sql
+    schema: schema/
+    queries: queries/
     gen:
       go:
         package: db

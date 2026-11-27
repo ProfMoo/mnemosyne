@@ -25,11 +25,11 @@ type Listen struct {
 
 // Recording identifies audio independently of any particular release edition.
 type Recording struct {
-	Title        string
-	ArtistCredit []ArtistCredit
-	Albums       []Album
-	MBID         uuid.UUID
-	Duration     time.Duration
+	Title         string
+	ArtistCredits []ArtistCredit
+	Albums        []Album
+	MBID          uuid.UUID
+	Duration      time.Duration
 }
 
 // ArtistCredit is slightly different from Artist. An Artist will be the canonical name and MBID,
@@ -45,8 +45,8 @@ type ArtistCredit struct {
 }
 
 type Album struct {
-	Title        string
-	ArtistCredit []ArtistCredit
+	Title         string
+	ArtistCredits []ArtistCredit
 	// Will be a release ID.
 	MBID uuid.UUID
 }

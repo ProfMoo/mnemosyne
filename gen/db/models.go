@@ -4,7 +4,21 @@
 
 package db
 
+import (
+	"time"
+)
+
 type Greeting struct {
 	ID      int64
 	Message string
+}
+
+type Listen struct {
+	ID            []byte
+	CreatedAt     time.Time
+	UpdatedAt     time.Time
+	Duration      int64
+	ArtistCredits string
+	Albums        string
+	Mbid          []byte
 }

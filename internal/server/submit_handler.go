@@ -113,7 +113,7 @@ func (h *SubmitHandler) constructFullListen(
 		UpdatedAt: &now,
 		Recording: &listens.Recording{
 			Title:        bestCandidate.Recording.Title,
-			ArtistCredit: convertMatchingArtistCreditToInternalArtistCredit(bestCandidate.Recording.ArtistCredit),
+			ArtistCredits: convertMatchingArtistCreditToInternalArtistCredit(bestCandidate.Recording.ArtistCredit),
 			Albums:       convertMatchingAlbumsToInternalAlbums(bestCandidate.Recording.Albums),
 			MBID:         bestCandidate.Recording.MBID,
 			Duration:     bestCandidate.Recording.Duration,
@@ -140,7 +140,7 @@ func convertMatchingAlbumsToInternalAlbums(albums []matching.Album) []listens.Al
 	for i, album := range albums {
 		internalAlbums[i] = listens.Album{
 			Title:        album.Title,
-			ArtistCredit: convertMatchingArtistCreditToInternalArtistCredit(album.ArtistCredit),
+			ArtistCredits: convertMatchingArtistCreditToInternalArtistCredit(album.ArtistCredit),
 			MBID:         album.MBID,
 		}
 	}

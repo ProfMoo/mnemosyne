@@ -10,6 +10,14 @@
             "source.organizeImports": "explicit"
         }
     },
+    "[sql]": {
+        "editor.defaultFormatter": "sqlfluff.vscode-sqlfluff",
+        "editor.formatOnSave": true
+    },
+    "sqlfluff.config": "${workspaceFolder}/.sqlfluff",
+    "sqlfluff.executablePath": "/Users/drmoo/.local/share/mise/shims/sqlfluff",
+    "sqlfluff.format.enabled": true,
+    "sqlfluff.linter.run": "onSave",
     "mise.configureExtensionsAutomatically": true,
     "mise.configureExtensionsAutomaticallyIncludeList": [
         "golang.go"

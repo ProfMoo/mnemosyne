@@ -20,19 +20,33 @@ run: build
 run-dev: gen frontend-build
 	go run ./$(MAIN_PACKAGE)
 
+.PHONY: lint
+lint: go-lint sql-lint lint-api
+
 .PHONY: lint-api
 lint-api:
 	REDOCLY_SUPPRESS_NOTIFICATIONS=true npx --yes @redocly/cli@2.80.0 lint
 	npx --yes @stoplight/spectral-cli@6.17.1 lint api/openapi.yaml
 
-.PHONY: lint
-lint:
+.PHONY: go-lint
+go-lint:
 	go tool golangci-lint run ./...
 	GOOS=js GOARCH=wasm "$(GOLANGCI_LINT)" run ./internal/ui/... ./cmd/frontend/...
 
+.PHONY: sql-lint
+sql-lint:
+	mise exec -- sqlfluff lint .
+
 .PHONY: fmt
-fmt:
+fmt: go-fmt sql-fmt
+
+.PHONY: go-fmt
+go-fmt:
 	go tool golangci-lint fmt ./...
+
+.PHONY: sql-fmt
+sql-fmt:
+	mise exec -- sqlfluff format .
 
 .PHONY: fmt-check
 fmt-check:

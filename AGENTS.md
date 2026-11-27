@@ -33,5 +33,10 @@ For editing or creating configuration, read [configuration](./agents/contributin
 
 ## Tooling
 
+* When adding or changing linting, formatting, or VS Code integrations, follow [tooling.md](.agents/contributing/tooling.md).
 * Use `make` targets whenever possible. Example: use `make lint` instead of running `golangci-lint` directly.
 * Try to use `tofu` first instead of `terraform` when working with HCL
+
+## Linting
+
+* After every change, follow [linting.md](.agents/contributing/linting.md) and run its required lint checks before reporting completion.
