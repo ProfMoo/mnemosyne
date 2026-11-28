@@ -54,6 +54,7 @@ fmt-check:
 
 .PHONY: gen
 gen: lint-api
+	rm -rf gen
 	go generate ./...
 
 .PHONY: clean
