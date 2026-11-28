@@ -17,7 +17,13 @@ import (
 
 // NewServer returns the HTTP server for the Mnemosyne UI and API.
 func NewServer(params NewServerParams) *http.Server {
-	strictHandler := api.NewStrictHandler(params.Handler, params.MiddlewareStack)
+	strictHandler := api.NewStrictHandlerWithOptions(
+		params.Handler,
+		params.MiddlewareStack,
+		api.StrictHTTPServerOptions{
+			ResponseErrorHandlerFunc: writeInternalError,
+		},
+	)
 
 	mux := http.NewServeMux()
 	apiHandler := api.HandlerFromMux(strictHandler, mux)
@@ -34,6 +40,17 @@ func NewServer(params NewServerParams) *http.Server {
 		ReadHeaderTimeout: 5 * time.Second,
 	}
 	return apiServer
+}
+
+func writeInternalError(w http.ResponseWriter, request *http.Request, _ error) {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusInternalServerError)
+	response := api.ErrorResponse{
+		Code: "INTERNAL_ERROR", Message: "An internal error occurred",
+	}
+	if err := json.NewEncoder(w).Encode(response); err != nil {
+		slog.ErrorContext(request.Context(), "write error response", "error", err)
+	}
 }
 
 type NewServerParams struct {

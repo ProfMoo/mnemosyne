@@ -8,6 +8,12 @@ get:
         application/json:
           schema:
             $ref: "../../openapi.yaml#/components/schemas/GetListenResponse"
+    "404":
+      description: No listen exists with this ID.
+      content:
+        application/json:
+          schema:
+            $ref: "../../openapi.yaml#/components/schemas/ErrorResponse"
     "500":
       description: An error occurred.
       content:

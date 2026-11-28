@@ -80,6 +80,23 @@ Coverage is not the goal; a test that fails when behavior breaks is. Before addi
   }
   ```
 
+* Consider deeply ISP (Interface Segregation Principle). Only put multiple methods on an interface if the methods ONLY MAKE SENSE TOGETHER and are used together the vast majority of the time.
+
+  ```go
+  // GOOD! This makes sense as one interface since there's an underlying constraint on how the pagetoken is constructed to work across both Encode and Decode.
+  // Plus, the same API handler would use both methods.
+  type PageTokenDecoder interface {
+    Encode(tokenInputs TokenInputs) (string, error)
+    Decode(string pageToken) error
+  }
+
+  // BAD! These methods are almost never used in the same struct (and don't NEED to be used together in any circumstance). These methods should be two interfaces.
+  type ThingRepository interface {
+    GetThing(ctx context.Context, getThingRequest GetThingRequest) (Thing, error)
+    ListThings(ctx context.Context, listThingsRequest ListThingsRequest) ([]Thing, error)
+  }
+  ```
+
 ## Observability
 
 * ALL observability (ex: metrics, logging, traces) should be completed in an interceptor.

@@ -30,6 +30,14 @@ components:
       $ref: "./components/schemas/Listen.yaml"
     Artist:
       $ref: "./components/schemas/Artist.yaml"
+    MBID:
+      $ref: "./components/schemas/MBID.yaml"
+    ArtistCredit:
+      $ref: "./components/schemas/ArtistCredit.yaml"
+    Album:
+      $ref: "./components/schemas/Album.yaml"
+    Recording:
+      $ref: "./components/schemas/Recording.yaml"
     SubmitListensJSONBody:
       $ref: "./components/schemas/SubmitListensJSONBody.yaml"
     SingleSubmission:

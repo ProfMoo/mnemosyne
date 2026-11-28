@@ -18,6 +18,7 @@ type Listen struct {
 	CreatedAt     time.Time
 	UpdatedAt     time.Time
 	Duration      int64
+	Title         string
 	ArtistCredits string
 	Albums        string
 	Mbid          []byte

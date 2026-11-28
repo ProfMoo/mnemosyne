@@ -15,6 +15,7 @@ SELECT
     created_at,
     updated_at,
     duration,
+    title,
     artist_credits,
     albums,
     mbid
@@ -30,6 +31,7 @@ func (q *Queries) GetListen(ctx context.Context, id []byte) (Listen, error) {
 		&i.CreatedAt,
 		&i.UpdatedAt,
 		&i.Duration,
+		&i.Title,
 		&i.ArtistCredits,
 		&i.Albums,
 		&i.Mbid,

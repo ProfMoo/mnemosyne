@@ -7,12 +7,16 @@ package db
 
 import (
 	"context"
+	"time"
 )
 
 const insertListen = `-- name: InsertListen :one
 INSERT INTO listens (
     id,
+    created_at,
+    updated_at,
     duration,
+    title,
     artist_credits,
     albums,
     mbid
@@ -21,13 +25,17 @@ INSERT INTO listens (
     ?2,
     ?3,
     ?4,
-    ?5
+    ?5,
+    ?6,
+    ?7,
+    ?8
 )
 RETURNING
     id,
     created_at,
     updated_at,
     duration,
+    title,
     artist_credits,
     albums,
     mbid
@@ -35,7 +43,10 @@ RETURNING
 
 type InsertListenParams struct {
 	ID            []byte
+	CreatedAt     time.Time
+	UpdatedAt     time.Time
 	Duration      int64
+	Title         string
 	ArtistCredits string
 	Albums        string
 	Mbid          []byte
@@ -44,7 +55,10 @@ type InsertListenParams struct {
 func (q *Queries) InsertListen(ctx context.Context, arg InsertListenParams) (Listen, error) {
 	row := q.db.QueryRowContext(ctx, insertListen,
 		arg.ID,
+		arg.CreatedAt,
+		arg.UpdatedAt,
 		arg.Duration,
+		arg.Title,
 		arg.ArtistCredits,
 		arg.Albums,
 		arg.Mbid,
@@ -55,6 +69,7 @@ func (q *Queries) InsertListen(ctx context.Context, arg InsertListenParams) (Lis
 		&i.CreatedAt,
 		&i.UpdatedAt,
 		&i.Duration,
+		&i.Title,
 		&i.ArtistCredits,
 		&i.Albums,
 		&i.Mbid,

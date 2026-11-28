@@ -1,0 +1,18 @@
+type: object
+required:
+  - title
+  - artistCredits
+  - mbid
+properties:
+  title:
+    type: string
+    example: OK Computer
+  artistCredits:
+    type: array
+    example: []
+    items:
+      $ref: "../../openapi.yaml#/components/schemas/ArtistCredit"
+  mbid:
+    $ref: "../../openapi.yaml#/components/schemas/MBID"
+    example: 6d3ba61d-3c5b-4c74-a7b8-37ad54454f08
+    description: MusicBrainz release ID.

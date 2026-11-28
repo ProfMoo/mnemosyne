@@ -33,7 +33,8 @@
     "go.alternateTools": {
         "go": "/Users/drmoo/.local/share/mise/shims/go",
         "dlv": "/Users/drmoo/.local/share/mise/shims/dlv",
-        "customFormatter": "/Users/drmoo/.local/share/mise/shims/go"
+        "customFormatter": "/Users/drmoo/.local/share/mise/shims/go",
+        "gopls": "/Users/drmoo/.local/share/mise/shims/gopls"
     },
     "go.lintOnSave": "off",
     "go.formatTool": "custom",

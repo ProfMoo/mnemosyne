@@ -9,25 +9,19 @@ properties:
   artist_mbids:
     type: array
     items:
-      type: string
-      format: uuid
+      $ref: "../../openapi.yaml#/components/schemas/MBID"
   release_group_mbid:
-    type: string
-    format: uuid
+    $ref: "../../openapi.yaml#/components/schemas/MBID"
   release_mbid:
-    type: string
-    format: uuid
+    $ref: "../../openapi.yaml#/components/schemas/MBID"
   recording_mbid:
-    type: string
-    format: uuid
+    $ref: "../../openapi.yaml#/components/schemas/MBID"
   track_mbid:
-    type: string
-    format: uuid
+    $ref: "../../openapi.yaml#/components/schemas/MBID"
   work_mbids:
     type: array
     items:
-      type: string
-      format: uuid
+      $ref: "../../openapi.yaml#/components/schemas/MBID"
   tracknumber:
     type: string
   isrc:

@@ -55,8 +55,3 @@ type Artist struct {
 	Name string
 	MBID uuid.UUID
 }
-
-type MBIDResult struct {
-	MBID       *string `json:"mbid"`
-	Confidence *int    `json:"confidence"`
-}

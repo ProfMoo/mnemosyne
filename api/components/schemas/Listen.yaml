@@ -1,84 +1,22 @@
 type: object
 required:
   - id
-  - artists
-  - albumArtists
-  - album
-  - track
-  - startedAt
-  - endedAt
+  - createdAt
+  - updatedAt
+  - recording
 properties:
   id:
     type: string
     format: uuid
     example: 2f6b8c90-1234-4abc-8def-1234567890ab
-  artists:
-    type: array
-    example:
-      - name: Radiohead
-        id: 7f6b8c90-1234-4abc-8def-1234567890ab
-        mbid: a74b1b7f-71a5-4011-9441-d0b5e4122711
-    items:
-      $ref: "../../openapi.yaml#/components/schemas/Artist"
-  albumArtists:
-    type: array
-    example:
-      - name: Radiohead
-        id: 7f6b8c90-1234-4abc-8def-1234567890ab
-        mbid: a74b1b7f-71a5-4011-9441-d0b5e4122711
-    items:
-      $ref: "../../openapi.yaml#/components/schemas/Artist"
-  album:
-    type: object
-    example:
-      name: OK Computer
-      id: 8f6b8c90-1234-4abc-8def-1234567890ab
-      mbid: 6d3ba61d-3c5b-4c74-a7b8-37ad54454f08
-    required:
-      - name
-      - id
-      - mbid
-    properties:
-      name:
-        type: string
-        example: OK Computer
-      id:
-        type: string
-        format: uuid
-        example: 8f6b8c90-1234-4abc-8def-1234567890ab
-      mbid:
-        type: string
-        format: uuid
-        example: 6d3ba61d-3c5b-4c74-a7b8-37ad54454f08
-  track:
-    type: object
-    example:
-      name: Paranoid Android
-      id: 9f6b8c90-1234-4abc-8def-1234567890ab
-      mbid: 9f6b8c90-5678-4abc-8def-1234567890ab
-    required:
-      - name
-      - id
-      - mbid
-    properties:
-      name:
-        type: string
-        example: Paranoid Android
-      id:
-        type: string
-        format: uuid
-        example: 9f6b8c90-1234-4abc-8def-1234567890ab
-      mbid:
-        type: string
-        format: uuid
-        example: 9f6b8c90-5678-4abc-8def-1234567890ab
-  startedAt:
+  createdAt:
     type: string
     format: date-time
-    example: 2026-01-01T00:00:00Z
-    description: The time the listen started. UTC ISO 8601 format.
-  endedAt:
+    example: "2026-01-01T00:00:00Z"
+    description: When this listen was created, not when playback started.
+  updatedAt:
     type: string
     format: date-time
-    example: 2026-01-01T00:00:00Z
-    description: The time the listen ended. UTC ISO 8601 format.
+    example: "2026-01-01T00:00:00Z"
+  recording:
+    $ref: "../../openapi.yaml#/components/schemas/Recording"
