@@ -52,6 +52,8 @@ func main() {
 			server.ConstructMiddlewareStack,
 			server.NewLoggingMiddleware,
 			server.NewSubmitHandler,
+			server.NewGetListenHandler,
+			server.NewGetListensHandler,
 		),
 		repository.Module,
 		fx.Invoke(server.RegisterServer),

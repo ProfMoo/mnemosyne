@@ -1,0 +1,37 @@
+type: object
+example:
+  title: Paranoid Android
+  artistCredits: []
+  albums: []
+  mbid: 9f6b8c90-5678-4abc-8def-1234567890ab
+  duration: 383000000000
+required:
+  - title
+  - artistCredits
+  - albums
+  - mbid
+  - duration
+properties:
+  title:
+    type: string
+    example: Paranoid Android
+  artistCredits:
+    type: array
+    example: []
+    items:
+      $ref: "../../openapi.yaml#/components/schemas/ArtistCredit"
+  albums:
+    type: array
+    example: []
+    items:
+      $ref: "../../openapi.yaml#/components/schemas/Album"
+  mbid:
+    type: string
+    format: uuid
+    example: 9f6b8c90-5678-4abc-8def-1234567890ab
+  duration:
+    type: integer
+    format: int64
+    minimum: 0
+    example: 383000000000
+    description: Recording duration in nanoseconds, matching Go time.Duration.

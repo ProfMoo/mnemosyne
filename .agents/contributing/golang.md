@@ -80,6 +80,14 @@ Coverage is not the goal; a test that fails when behavior breaks is. Before addi
   }
   ```
 
+* Consider deeply ISP (Interface Segregation Principle). Only put multiple methods on an interface if the methods ONLY MAKE SENSE TOGETHER and are used together the vast majority of the time.
+
+  ```go
+  type PageTokenDecoder interface {
+    Encode(tokenInputs TokenInputs) (string, error)
+    Decode(string pageToken) error
+  }
+
 ## Observability
 
 * ALL observability (ex: metrics, logging, traces) should be completed in an interceptor.

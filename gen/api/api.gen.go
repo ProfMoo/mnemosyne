@@ -51,11 +51,28 @@ type AdditionalInfo struct {
 	AdditionalProperties    map[string]interface{} `json:"-"`
 }
 
+// Album defines model for Album.
+type Album struct {
+	ArtistCredits []ArtistCredit `json:"artistCredits"`
+
+	// Mbid MusicBrainz release ID.
+	Mbid  openapi_types.UUID `json:"mbid"`
+	Title string             `json:"title"`
+}
+
 // Artist defines model for Artist.
 type Artist struct {
-	Id   openapi_types.UUID `json:"id"`
 	Mbid openapi_types.UUID `json:"mbid"`
 	Name string             `json:"name"`
+}
+
+// ArtistCredit defines model for ArtistCredit.
+type ArtistCredit struct {
+	Artist Artist `json:"artist"`
+
+	// JoinPhrase Text joining this credit to the next credit; empty for the last credit.
+	JoinPhrase string `json:"joinPhrase"`
+	Name       string `json:"name"`
 }
 
 // CompletedListen defines model for CompletedListen.
@@ -98,25 +115,11 @@ type ListListensResponse struct {
 
 // Listen defines model for Listen.
 type Listen struct {
-	Album struct {
-		Id   openapi_types.UUID `json:"id"`
-		Mbid openapi_types.UUID `json:"mbid"`
-		Name string             `json:"name"`
-	} `json:"album"`
-	AlbumArtists []Artist `json:"albumArtists"`
-	Artists      []Artist `json:"artists"`
-
-	// EndedAt The time the listen ended. UTC ISO 8601 format.
-	EndedAt time.Time          `json:"endedAt"`
-	Id      openapi_types.UUID `json:"id"`
-
-	// StartedAt The time the listen started. UTC ISO 8601 format.
-	StartedAt time.Time `json:"startedAt"`
-	Track     struct {
-		Id   openapi_types.UUID `json:"id"`
-		Mbid openapi_types.UUID `json:"mbid"`
-		Name string             `json:"name"`
-	} `json:"track"`
+	// CreatedAt When this listen was created, not when playback started.
+	CreatedAt time.Time          `json:"createdAt"`
+	Id        openapi_types.UUID `json:"id"`
+	Recording Recording          `json:"recording"`
+	UpdatedAt time.Time          `json:"updatedAt"`
 }
 
 // PlayingNowListen defines model for PlayingNowListen.
@@ -128,6 +131,17 @@ type PlayingNowListen struct {
 type PlayingNowSubmission struct {
 	ListenType interface{}        `json:"listen_type"`
 	Payload    []PlayingNowListen `json:"payload"`
+}
+
+// Recording defines model for Recording.
+type Recording struct {
+	Albums        []Album        `json:"albums"`
+	ArtistCredits []ArtistCredit `json:"artistCredits"`
+
+	// Duration Recording duration in nanoseconds, matching Go time.Duration.
+	Duration int64              `json:"duration"`
+	Mbid     openapi_types.UUID `json:"mbid"`
+	Title    string             `json:"title"`
 }
 
 // SingleSubmission defines model for SingleSubmission.
@@ -1102,6 +1116,20 @@ func (response GetListen200JSONResponse) VisitGetListenResponse(w http.ResponseW
 	}
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
+type GetListen404JSONResponse ErrorResponse
+
+func (response GetListen404JSONResponse) VisitGetListenResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(404)
 	_, err := buf.WriteTo(w)
 	return err
 }

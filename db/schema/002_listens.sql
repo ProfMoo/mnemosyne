@@ -4,6 +4,7 @@ CREATE TABLE IF NOT EXISTS listens (
     created_at DATETIME NOT NULL DEFAULT current_timestamp,
     updated_at DATETIME NOT NULL DEFAULT current_timestamp,
     duration INTEGER NOT NULL,
+    title TEXT NOT NULL DEFAULT '',
     artist_credits TEXT NOT NULL DEFAULT '[]' CHECK (
         json_valid(artist_credits)
         AND json_type(artist_credits) = 'array'

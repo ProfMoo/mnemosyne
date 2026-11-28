@@ -14,16 +14,16 @@ import (
 	"github.com/profmoo/mnemosyne/internal/matching"
 )
 
+var errInvalidSubmission = errors.New("single submission requires one listen with artist and track names")
+
+// SubmitHandler matches and persists submitted listens.
 type SubmitHandler struct {
 	matcher          matching.Matcher
-	listenRepository ListenRepository
+	listenRepository listens.ListenCreator
 	timeSource       func() time.Time
 }
 
-type ListenRepository interface {
-	Create(ctx context.Context, listen *listens.Listen) error
-}
-
+// NewSubmitHandler constructs the listen submission handler.
 func NewSubmitHandler(params SubmitHandlerParams) *SubmitHandler {
 	return &SubmitHandler{
 		matcher:          params.Matcher,
@@ -32,21 +32,26 @@ func NewSubmitHandler(params SubmitHandlerParams) *SubmitHandler {
 	}
 }
 
+// SubmitHandlerParams supplies matching, persistence, and the clock.
 type SubmitHandlerParams struct {
 	fx.In
 
 	Matcher          matching.Matcher
-	ListenRepository ListenRepository
+	ListenRepository listens.ListenCreator
 	TimeSource       func() time.Time
 }
 
+// Handle matches and saves a single submission.
 func (h *SubmitHandler) Handle(
 	ctx context.Context,
 	req api.SubmitListensRequestObject,
 ) (api.SubmitListensResponseObject, error) {
 	listen, err := convertAPIListenToInternalListen(req.Body)
+	if errors.Is(err, errInvalidSubmission) {
+		return api.SubmitListens400Response{}, nil
+	}
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("decode submitted listen: %w", err)
 	}
 
 	input := matching.Input{
@@ -56,17 +61,18 @@ func (h *SubmitHandler) Handle(
 
 	match, err := h.matcher.Match(ctx, input)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("match submitted listen: %w", err)
 	}
 
-	fullListen, err := h.constructFullListen(&match, listen)
-	if err != nil {
-		return nil, err
+	const noCandidates = 0
+	if match.Status != matching.StatusMatched || len(match.Candidates) == noCandidates {
+		return api.SubmitListens400Response{}, nil
 	}
+	fullListen := h.constructFullListen(&match, listen)
 
 	err = h.listenRepository.Create(ctx, fullListen)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("save submitted listen: %w", err)
 	}
 
 	// 1. convert to internal representation of listen
@@ -79,19 +85,27 @@ func (h *SubmitHandler) Handle(
 }
 
 func convertAPIListenToInternalListen(listen *api.SubmitListensJSONRequestBody) (*listens.ListenImport, error) {
-	body := api.SubmitListensJSONBody(*listen)
+	if listen == nil {
+		return nil, errInvalidSubmission
+	}
+	body := *listen
 
 	submission, err := body.AsSingleSubmission()
 	if err != nil {
-		return nil, fmt.Errorf("decode single submission: %w", err)
+		return nil, fmt.Errorf("decode single submission: %w", errors.Join(errInvalidSubmission, err))
 	}
 
-	if len(submission.Payload) != 1 {
-		return nil, errors.New("single submission requires one listen")
+	const singleListen = 1
+	if submission.ListenType != "single" || len(submission.Payload) != singleListen {
+		return nil, errInvalidSubmission
 	}
 
-	item := submission.Payload[0]
+	const firstListen = 0
+	item := submission.Payload[firstListen]
 	metadata := item.TrackMetadata
+	if metadata.ArtistName == "" || metadata.TrackName == "" {
+		return nil, errInvalidSubmission
+	}
 	id := uuid.New()
 
 	return &listens.ListenImport{
@@ -104,28 +118,30 @@ func convertAPIListenToInternalListen(listen *api.SubmitListensJSONRequestBody) 
 func (h *SubmitHandler) constructFullListen(
 	match *matching.Result,
 	listen *listens.ListenImport,
-) (*listens.Listen, error) {
+) *listens.Listen {
 	now := h.timeSource()
-	bestCandidate := match.Candidates[0]
+	const bestCandidateIndex = 0
+	bestCandidate := match.Candidates[bestCandidateIndex]
 	return &listens.Listen{
 		ID:        listen.ID,
 		CreatedAt: &now,
 		UpdatedAt: &now,
 		Recording: &listens.Recording{
-			Title:        bestCandidate.Recording.Title,
+			Title:         bestCandidate.Recording.Title,
 			ArtistCredits: convertMatchingArtistCreditToInternalArtistCredit(bestCandidate.Recording.ArtistCredit),
-			Albums:       convertMatchingAlbumsToInternalAlbums(bestCandidate.Recording.Albums),
-			MBID:         bestCandidate.Recording.MBID,
-			Duration:     bestCandidate.Recording.Duration,
+			Albums:        convertMatchingAlbumsToInternalAlbums(bestCandidate.Recording.Albums),
+			MBID:          bestCandidate.Recording.MBID,
+			Duration:      bestCandidate.Recording.Duration,
 		},
-	}, nil
+	}
 }
 
 func convertMatchingArtistCreditToInternalArtistCredit(artistCredit []matching.ArtistCredit) []listens.ArtistCredit {
 	internalArtistCredit := make([]listens.ArtistCredit, len(artistCredit))
 	for i, credit := range artistCredit {
 		internalArtistCredit[i] = listens.ArtistCredit{
-			Name: credit.Name,
+			Name:       credit.Name,
+			JoinPhrase: credit.JoinPhrase,
 			Artists: listens.Artist{
 				Name: credit.Artists.Name,
 				MBID: credit.Artists.MBID,
@@ -139,9 +155,9 @@ func convertMatchingAlbumsToInternalAlbums(albums []matching.Album) []listens.Al
 	internalAlbums := make([]listens.Album, len(albums))
 	for i, album := range albums {
 		internalAlbums[i] = listens.Album{
-			Title:        album.Title,
+			Title:         album.Title,
 			ArtistCredits: convertMatchingArtistCreditToInternalArtistCredit(album.ArtistCredit),
-			MBID:         album.MBID,
+			MBID:          album.MBID,
 		}
 	}
 	return internalAlbums

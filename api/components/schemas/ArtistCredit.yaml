@@ -1,0 +1,15 @@
+type: object
+required:
+  - name
+  - joinPhrase
+  - artist
+properties:
+  name:
+    type: string
+    example: Radiohead
+  joinPhrase:
+    type: string
+    example: ""
+    description: Text joining this credit to the next credit; empty for the last credit.
+  artist:
+    $ref: "../../openapi.yaml#/components/schemas/Artist"

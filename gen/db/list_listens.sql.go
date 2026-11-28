@@ -15,6 +15,7 @@ SELECT
     created_at,
     updated_at,
     duration,
+    title,
     artist_credits,
     albums,
     mbid
@@ -44,6 +45,7 @@ func (q *Queries) ListListens(ctx context.Context, arg ListListensParams) ([]Lis
 			&i.CreatedAt,
 			&i.UpdatedAt,
 			&i.Duration,
+			&i.Title,
 			&i.ArtistCredits,
 			&i.Albums,
 			&i.Mbid,

@@ -4,6 +4,7 @@ SELECT
     created_at,
     updated_at,
     duration,
+    title,
     artist_credits,
     albums,
     mbid

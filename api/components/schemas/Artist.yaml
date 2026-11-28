@@ -1,16 +1,14 @@
 type: object
+example:
+  name: Radiohead
+  mbid: a74b1b7f-71a5-4011-9441-d0b5e4122711
 required:
   - name
-  - id
   - mbid
 properties:
   name:
     type: string
     example: Radiohead
-  id:
-    type: string
-    format: uuid
-    example: 7f6b8c90-1234-4abc-8def-1234567890ab
   mbid:
     type: string
     format: uuid

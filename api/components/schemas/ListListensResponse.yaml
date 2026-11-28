@@ -4,25 +4,6 @@ required:
 properties:
   listens:
     type: array
-    example:
-      - id: 2f6b8c90-1234-4abc-8def-1234567890ab
-        artists:
-          - name: Radiohead
-            id: 7f6b8c90-1234-4abc-8def-1234567890ab
-            mbid: a74b1b7f-71a5-4011-9441-d0b5e4122711
-        albumArtists:
-          - name: Radiohead
-            id: 7f6b8c90-1234-4abc-8def-1234567890ab
-            mbid: a74b1b7f-71a5-4011-9441-d0b5e4122711
-        album:
-          name: OK Computer
-          id: 8f6b8c90-1234-4abc-8def-1234567890ab
-          mbid: 6d3ba61d-3c5b-4c74-a7b8-37ad54454f08
-        track:
-          name: Paranoid Android
-          id: 9f6b8c90-1234-4abc-8def-1234567890ab
-          mbid: 9f6b8c90-5678-4abc-8def-1234567890ab
-        startedAt: "2026-01-01T00:00:00Z"
-        endedAt: "2026-01-01T00:06:23Z"
+    example: []
     items:
       $ref: "../../openapi.yaml#/components/schemas/Listen"
