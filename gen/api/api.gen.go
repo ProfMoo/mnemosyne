@@ -21,34 +21,42 @@ import (
 // AdditionalInfo All listed fields are optional. The ListenBrainz documentation explicitly permits other application-defined fields. Omit unavailable fields.
 // Fields are snake_case because that's the ListenBrainz convention.
 type AdditionalInfo struct {
-	ArtistMbids        *[]openapi_types.UUID `json:"artist_mbids,omitempty"`
-	Duration           *int                  `json:"duration,omitempty"`
-	DurationMs         *int                  `json:"duration_ms,omitempty"`
-	DurationPlayed     *int                  `json:"duration_played,omitempty"`
-	DurationPlayedMs   *int                  `json:"duration_played_ms,omitempty"`
-	Isrc               *string               `json:"isrc,omitempty"`
-	Label              *string               `json:"label,omitempty"`
-	MediaPlayer        *string               `json:"media_player,omitempty"`
-	MediaPlayerVersion *string               `json:"media_player_version,omitempty"`
+	ArtistMbids        *[]MBID `json:"artist_mbids,omitempty"`
+	Duration           *int    `json:"duration,omitempty"`
+	DurationMs         *int    `json:"duration_ms,omitempty"`
+	DurationPlayed     *int    `json:"duration_played,omitempty"`
+	DurationPlayedMs   *int    `json:"duration_played_ms,omitempty"`
+	Isrc               *string `json:"isrc,omitempty"`
+	Label              *string `json:"label,omitempty"`
+	MediaPlayer        *string `json:"media_player,omitempty"`
+	MediaPlayerVersion *string `json:"media_player_version,omitempty"`
 
 	// MusicService Canonical service domain, e.g. spotify.com.
-	MusicService             *string             `json:"music_service,omitempty"`
-	MusicServiceName         *string             `json:"music_service_name,omitempty"`
-	OriginUrl                *string             `json:"origin_url,omitempty"`
-	OriginalSubmissionClient *string             `json:"original_submission_client,omitempty"`
-	RecordingMbid            *openapi_types.UUID `json:"recording_mbid,omitempty"`
-	ReleaseGroupMbid         *openapi_types.UUID `json:"release_group_mbid,omitempty"`
-	ReleaseMbid              *openapi_types.UUID `json:"release_mbid,omitempty"`
+	MusicService             *string `json:"music_service,omitempty"`
+	MusicServiceName         *string `json:"music_service_name,omitempty"`
+	OriginUrl                *string `json:"origin_url,omitempty"`
+	OriginalSubmissionClient *string `json:"original_submission_client,omitempty"`
+
+	// RecordingMbid MusicBrainz identifier.
+	RecordingMbid *MBID `json:"recording_mbid,omitempty"`
+
+	// ReleaseGroupMbid MusicBrainz identifier.
+	ReleaseGroupMbid *MBID `json:"release_group_mbid,omitempty"`
+
+	// ReleaseMbid MusicBrainz identifier.
+	ReleaseMbid *MBID `json:"release_mbid,omitempty"`
 
 	// SpotifyId Spotify track URL, per ListenBrainz documentation.
-	SpotifyId               *string                `json:"spotify_id,omitempty"`
-	SubmissionClient        *string                `json:"submission_client,omitempty"`
-	SubmissionClientVersion *string                `json:"submission_client_version,omitempty"`
-	Tags                    *[]string              `json:"tags,omitempty"`
-	TrackMbid               *openapi_types.UUID    `json:"track_mbid,omitempty"`
-	Tracknumber             *string                `json:"tracknumber,omitempty"`
-	WorkMbids               *[]openapi_types.UUID  `json:"work_mbids,omitempty"`
-	AdditionalProperties    map[string]interface{} `json:"-"`
+	SpotifyId               *string   `json:"spotify_id,omitempty"`
+	SubmissionClient        *string   `json:"submission_client,omitempty"`
+	SubmissionClientVersion *string   `json:"submission_client_version,omitempty"`
+	Tags                    *[]string `json:"tags,omitempty"`
+
+	// TrackMbid MusicBrainz identifier.
+	TrackMbid            *MBID                  `json:"track_mbid,omitempty"`
+	Tracknumber          *string                `json:"tracknumber,omitempty"`
+	WorkMbids            *[]MBID                `json:"work_mbids,omitempty"`
+	AdditionalProperties map[string]interface{} `json:"-"`
 }
 
 // Album defines model for Album.
@@ -56,14 +64,15 @@ type Album struct {
 	ArtistCredits []ArtistCredit `json:"artistCredits"`
 
 	// Mbid MusicBrainz release ID.
-	Mbid  openapi_types.UUID `json:"mbid"`
-	Title string             `json:"title"`
+	Mbid  MBID   `json:"mbid"`
+	Title string `json:"title"`
 }
 
 // Artist defines model for Artist.
 type Artist struct {
-	Mbid openapi_types.UUID `json:"mbid"`
-	Name string             `json:"name"`
+	// Mbid MusicBrainz identifier.
+	Mbid MBID   `json:"mbid"`
+	Name string `json:"name"`
 }
 
 // ArtistCredit defines model for ArtistCredit.
@@ -122,6 +131,9 @@ type Listen struct {
 	UpdatedAt time.Time          `json:"updatedAt"`
 }
 
+// MBID MusicBrainz identifier.
+type MBID = openapi_types.UUID
+
 // PlayingNowListen defines model for PlayingNowListen.
 type PlayingNowListen struct {
 	TrackMetadata TrackMetadata `json:"track_metadata"`
@@ -139,9 +151,11 @@ type Recording struct {
 	ArtistCredits []ArtistCredit `json:"artistCredits"`
 
 	// Duration Recording duration in nanoseconds, matching Go time.Duration.
-	Duration int64              `json:"duration"`
-	Mbid     openapi_types.UUID `json:"mbid"`
-	Title    string             `json:"title"`
+	Duration int64 `json:"duration"`
+
+	// Mbid MusicBrainz identifier.
+	Mbid  MBID   `json:"mbid"`
+	Title string `json:"title"`
 }
 
 // SingleSubmission defines model for SingleSubmission.

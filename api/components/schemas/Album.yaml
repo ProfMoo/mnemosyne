@@ -13,7 +13,6 @@ properties:
     items:
       $ref: "../../openapi.yaml#/components/schemas/ArtistCredit"
   mbid:
-    type: string
-    format: uuid
+    $ref: "../../openapi.yaml#/components/schemas/MBID"
     example: 6d3ba61d-3c5b-4c74-a7b8-37ad54454f08
     description: MusicBrainz release ID.

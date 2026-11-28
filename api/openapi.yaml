@@ -30,6 +30,8 @@ components:
       $ref: "./components/schemas/Listen.yaml"
     Artist:
       $ref: "./components/schemas/Artist.yaml"
+    MBID:
+      $ref: "./components/schemas/MBID.yaml"
     ArtistCredit:
       $ref: "./components/schemas/ArtistCredit.yaml"
     Album:

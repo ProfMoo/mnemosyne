@@ -10,6 +10,5 @@ properties:
     type: string
     example: Radiohead
   mbid:
-    type: string
-    format: uuid
+    $ref: "../../openapi.yaml#/components/schemas/MBID"
     example: a74b1b7f-71a5-4011-9441-d0b5e4122711

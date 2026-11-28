@@ -26,8 +26,7 @@ properties:
     items:
       $ref: "../../openapi.yaml#/components/schemas/Album"
   mbid:
-    type: string
-    format: uuid
+    $ref: "../../openapi.yaml#/components/schemas/MBID"
     example: 9f6b8c90-5678-4abc-8def-1234567890ab
   duration:
     type: integer
